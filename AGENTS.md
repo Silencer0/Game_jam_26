@@ -43,6 +43,7 @@ refer to visuals.md for visual style guide.
 5. Temporal twist mechanic
 6. Enemy variety
 7. Visual polish
+look at plan.md for the stage by stage execution plan
 
 Prefer simple and robust implementations.
 
