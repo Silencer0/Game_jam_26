@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://codcnrtcq8u2a"]
+
+[node name="Main" type="Node2D" unique_id=725621044]
+
+[node name="Label" type="Label" parent="." unique_id=437697457]
+text = "FRAME//SHIFT"
