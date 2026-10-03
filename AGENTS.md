@@ -31,6 +31,9 @@ Twisting only reassigns Past / Present / Future roles to existing arena states.
 
 Future prediction should expose enemy AI intent rather than literally simulate the future when possible.
 
+## Visual Language
+refer to visuals.md for visual style guide.
+
 ## Priorities
 
 1. Complete playable game loop
