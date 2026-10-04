@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/practice_target.tscn" id="1"]
+[ext_resource type="Script" path="res://scripts/melee_grunt.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/enemy_melee.gd" id="3"]
+
+[node name="MeleeGrunt" instance=ExtResource("1")]
+script = ExtResource("2")
+
+[node name="Readout" parent="." index="2"]
+text = "GRUNT 6 / 6"
+
+[node name="Trainer" parent="." index="4"]
+script = ExtResource("3")
+windup_duration = 0.55
+player_path = NodePath("../../../Player")

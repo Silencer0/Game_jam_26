@@ -1,6 +1,286 @@
-[gd_scene format=3 uid="uid://codcnrtcq8u2a"]
+[gd_scene load_steps=5 format=3]
 
-[node name="Main" type="Node2D" unique_id=725621044]
+[ext_resource type="Script" path="res://scripts/panel_session.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/combat_panel.tscn" id="2"]
 
-[node name="Label" type="Label" parent="." unique_id=437697457]
-text = "FRAME//SHIFT"
+[ext_resource type="Script" path="res://scripts/pause_role_slot.gd" id="3"]
+
+[sub_resource type="StyleBoxFlat" id="HealthFill"]
+bg_color = Color(0.2, 0.85, 0.35, 1)
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+process_mode = 3
+script = ExtResource("1")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.015, 0.02, 0.035, 1)
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="Page" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Margin/Page"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "FRAME//SHIFT — THREE LIVE PANELS"
+
+[node name="Controls" type="Label" parent="Margin/Page"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "A/D or arrows: move  •  Space: double jump  •  Shift: dash  •  J / Left click: light  •  Q: launch / air finish  •  F / Right click: parry\nEsc: pause & choose panels  •  1/2/3: select panels  •  Tab: next panel  •  Past: −30% speed  •  Future: +30% speed  •  R: restart all panels."
+autowrap_mode = 2
+
+[node name="Timeline" type="Label" parent="Margin/Page"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "PAST: 1   →   PRESENT: 2   →   FUTURE: 3"
+autowrap_mode = 2
+
+[node name="SharedHealth" type="HBoxContainer" parent="Margin/Page"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="Readout" type="Label" parent="Margin/Page/SharedHealth"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "HEALTH 6 / 6"
+
+[node name="Bar" type="ProgressBar" parent="Margin/Page/SharedHealth"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/fill = SubResource("HealthFill")
+max_value = 6.0
+value = 6.0
+show_percentage = false
+mouse_filter = 2
+
+[node name="Panels" type="Control" parent="Margin/Page"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="PanelA" parent="Margin/Page/Panels" instance=ExtResource("2")]
+process_mode = 1
+layout_mode = 0
+size_flags_stretch_ratio = 2.0
+arena_id = &"A"
+controlled = true
+
+[node name="PanelB" parent="Margin/Page/Panels" instance=ExtResource("2")]
+process_mode = 1
+layout_mode = 0
+arena_id = &"B"
+
+[node name="PanelC" parent="Margin/Page/Panels" instance=ExtResource("2")]
+process_mode = 1
+layout_mode = 0
+arena_id = &"C"
+
+[node name="PauseOverlay" type="Control" parent="."]
+process_mode = 2
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dim" type="ColorRect" parent="PauseOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.015, 0.02, 0.035, 0.88)
+
+[node name="Center" type="CenterContainer" parent="PauseOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Card" type="PanelContainer" parent="PauseOverlay/Center"]
+layout_mode = 2
+custom_minimum_size = Vector2(660, 0)
+
+[node name="Margin" type="MarginContainer" parent="PauseOverlay/Center/Card"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Menu" type="VBoxContainer" parent="PauseOverlay/Center/Card/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="PauseOverlay/Center/Card/Margin/Menu"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "PAUSED"
+horizontal_alignment = 1
+
+[node name="Hint" type="Label" parent="PauseOverlay/Center/Card/Margin/Menu"]
+layout_mode = 2
+text = "Drag to swap roles · Click to select"
+horizontal_alignment = 1
+
+[node name="Roles" type="HBoxContainer" parent="PauseOverlay/Center/Card/Margin/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Past" type="Button" parent="PauseOverlay/Center/Card/Margin/Menu/Roles"]
+custom_minimum_size = Vector2(260, 210)
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("3")
+role = &"Past"
+
+[node name="Preview" type="TextureRect" parent="PauseOverlay/Center/Card/Margin/Menu/Roles/Past"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 42.0
+offset_right = 250.0
+offset_bottom = 172.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Caption" type="Label" parent="PauseOverlay/Center/Card/Margin/Menu/Roles/Past"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 8.0
+offset_right = 250.0
+offset_bottom = 38.0
+mouse_filter = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
+text = "PAST"
+
+[node name="Number" type="Label" parent="PauseOverlay/Center/Card/Margin/Menu/Roles/Past"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 174.0
+offset_right = 250.0
+offset_bottom = 206.0
+mouse_filter = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
+
+[node name="Present" type="Button" parent="PauseOverlay/Center/Card/Margin/Menu/Roles"]
+custom_minimum_size = Vector2(260, 210)
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("3")
+role = &"Present"
+
+[node name="Preview" type="TextureRect" parent="PauseOverlay/Center/Card/Margin/Menu/Roles/Present"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 42.0
+offset_right = 250.0
+offset_bottom = 172.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Caption" type="Label" parent="PauseOverlay/Center/Card/Margin/Menu/Roles/Present"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 8.0
+offset_right = 250.0
+offset_bottom = 38.0
+mouse_filter = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
+text = "PRESENT"
+
+[node name="Number" type="Label" parent="PauseOverlay/Center/Card/Margin/Menu/Roles/Present"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 174.0
+offset_right = 250.0
+offset_bottom = 206.0
+mouse_filter = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
+
+[node name="Future" type="Button" parent="PauseOverlay/Center/Card/Margin/Menu/Roles"]
+custom_minimum_size = Vector2(260, 210)
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("3")
+role = &"Future"
+
+[node name="Preview" type="TextureRect" parent="PauseOverlay/Center/Card/Margin/Menu/Roles/Future"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 42.0
+offset_right = 250.0
+offset_bottom = 172.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Caption" type="Label" parent="PauseOverlay/Center/Card/Margin/Menu/Roles/Future"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 8.0
+offset_right = 250.0
+offset_bottom = 38.0
+mouse_filter = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
+text = "FUTURE"
+
+[node name="Number" type="Label" parent="PauseOverlay/Center/Card/Margin/Menu/Roles/Future"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 174.0
+offset_right = 250.0
+offset_bottom = 206.0
+mouse_filter = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
+
+[node name="Resume" type="Button" parent="PauseOverlay/Center/Card/Margin/Menu"]
+layout_mode = 2
+text = "Resume (Esc)"
+
+[node name="Restart" type="Button" parent="PauseOverlay/Center/Card/Margin/Menu"]
+layout_mode = 2
+text = "Restart all panels (R)"
