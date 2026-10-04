@@ -21,7 +21,7 @@ func check(condition: bool, message: String) -> void:
 		push_error("FAIL: " + message)
 
 func fresh_page(disable_enemies: bool = true, use_native_flow: bool = false) -> void:
-	for action in ["move_left", "move_right", "jump", "dash", "light_attack", "heavy_attack", "parry", "restart"]:
+	for action in ["move_left", "move_right", "jump", "dash", "light_attack", "heavy_attack", "parry", "restart", "light_beam"]:
 		Input.action_release(action)
 	if is_instance_valid(page):
 		page.queue_free()

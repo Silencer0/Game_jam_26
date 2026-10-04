@@ -1,7 +1,7 @@
 extends Node3D
 ## A brief timed defense, never a held block. Training strikes call try_parry.
 
-@export var parry_window: float = 0.12
+@export var parry_window: float = 0.25
 @export var parry_cooldown: float = 0.35
 var window_left: float = 0.0
 var cooldown_left: float = 0.0

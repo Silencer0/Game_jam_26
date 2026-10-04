@@ -2,8 +2,10 @@ extends Node3D
 ## Reusable single-arena encounter: three finite grunt waves, defeat/victory, and instant restart.
 
 const ENEMY_SCENE: PackedScene = preload("res://scenes/melee_grunt.tscn")
-const WAVE_SIZES: Array[int] = [1, 2, 3]
+const RANGED_SCENE: PackedScene = preload("res://scenes/ranged_enemy.tscn")
+var WAVE_SIZES: Array[int] = [1, 2, 3] # Preserved standalone encounter.
 @export var restart_enabled: bool = true
+@export var ranged_enemies_enabled: bool = false
 
 var temporal_role: StringName = &"Present"
 var simulation_rate: float = 1.0
@@ -19,11 +21,13 @@ var result: StringName = &"fighting"
 @onready var readout: Label = $HUD/CombatReadout
 
 func _ready() -> void:
+	if ranged_enemies_enabled:
+		WAVE_SIZES = [1, 2, 1, 2]
 	player.defeated.connect(on_player_defeated)
 	spawn_wave() # All panels begin with an encounter before local slowdown applies.
 
 func set_simulation_rate(rate: float) -> void:
-	simulation_rate = clampf(rate, 0.01, 1.3)
+	simulation_rate = clampf(rate, 0.01, 1.15)
 	player.simulation_rate = simulation_rate
 	for enemy in enemies.get_children():
 		enemy.simulation_rate = simulation_rate
@@ -52,7 +56,7 @@ func spawn_wave() -> void:
 		player.melee.cancel_attack()
 		return
 	for index in range(WAVE_SIZES[wave - 1]):
-		var enemy: CharacterBody3D = ENEMY_SCENE.instantiate()
+		var enemy: CharacterBody3D = RANGED_SCENE.instantiate() if ranged_enemies_enabled and (wave == 3 or (wave == 4 and index == 1)) else ENEMY_SCENE.instantiate()
 		# Alternate sides, keep spawn away from the player and inside arena walls.
 		var side: float = 1.0 if index % 2 == 0 else -1.0
 		var spawn_x: float = clampf(player.position.x + side * (7.0 + float(index) * 2.0), 2.0, 30.0)

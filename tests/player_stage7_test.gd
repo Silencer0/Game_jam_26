@@ -7,10 +7,10 @@ func roles() -> String:
 func run_checks() -> void:
 	await fresh_page(true, true)
 	check(roles() == "Past/Present/Future", "Initial roles assign one Past, Present, and Future to fixed panel identities")
-	check(is_equal_approx(panels[0].arena.simulation_rate, 0.7) and is_equal_approx(panels[1].arena.simulation_rate, 0.1) and is_equal_approx(panels[2].arena.simulation_rate, 0.13), "Native flow multiplies activity speed: active Past 70%, inactive Present 10%, Future 13%")
+	check(is_equal_approx(panels[0].arena.simulation_rate, 0.85) and is_equal_approx(panels[1].arena.simulation_rate, 0.1) and is_equal_approx(panels[2].arena.simulation_rate, 0.1), "Active Past runs at 85%; both inactive roles run at 10%")
 	page.select_panel(2)
-	check(is_equal_approx(panels[2].arena.simulation_rate, 1.3) and is_equal_approx(panels[0].arena.simulation_rate, 0.07), "Selected Future runs at 130% while inactive Past runs at 7%")
-	check(panels[2].header.text.contains("FUTURE") and panels[2].header.text.contains("130%"), "Header exposes temporal role and effective speed")
+	check(is_equal_approx(panels[2].arena.simulation_rate, 1.15) and is_equal_approx(panels[0].arena.simulation_rate, 0.1), "Selected Future runs at 115% while inactive Past stays at 10%")
+	check(panels[2].role_icon.text == "»" and panels[2].header.text.contains("115%"), "Role icon and header expose temporal identity and effective speed")
 	page.select_panel(0)
 	var actor_ids: Array[int] = []
 	var spaces: Array[RID] = []
@@ -62,9 +62,9 @@ func run_checks() -> void:
 	for actor in panels[0].arena.enemies.get_children():
 		actor.receive_melee_hit(100, 1)
 	await ticks(2)
-	check(is_equal_approx(panels[1].arena.simulation_rate, 0.1) and is_equal_approx(panels[2].arena.simulation_rate, 0.13), "Clearing a wave leaves inactive role speeds unchanged")
+	check(is_equal_approx(panels[1].arena.simulation_rate, 0.1) and is_equal_approx(panels[2].arena.simulation_rate, 0.1), "Clearing a wave leaves inactive role speeds unchanged")
 	page.twist_timeline(true)
-	check(is_equal_approx(panels[0].arena.simulation_rate, 1.3) and is_equal_approx(panels[2].arena.simulation_rate, 0.07), "Twisting applies native multipliers independent of wave progress")
+	check(is_equal_approx(panels[0].arena.simulation_rate, 1.15) and is_equal_approx(panels[2].arena.simulation_rate, 0.1), "Twisting changes active native speed but leaves inactive clocks at 10%")
 
 	await fresh_page(true, true)
 	await key(KEY_ESCAPE)

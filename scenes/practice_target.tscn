@@ -1,8 +1,10 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/practice_target.gd" id="1"]
 
 [ext_resource type="Script" path="res://scripts/training_striker.gd" id="2"]
+
+[ext_resource type="Script" path="res://scripts/comic_actor.gd" id="3"]
 
 [sub_resource type="BoxShape3D" id="Hurtbox"]
 size = Vector3(0.9, 1.5, 0.9)
@@ -35,6 +37,7 @@ script = ExtResource("1")
 shape = SubResource("Hurtbox")
 
 [node name="Visual" type="MeshInstance3D" parent="."]
+script = ExtResource("3")
 mesh = SubResource("TargetMesh")
 
 [node name="Readout" type="Label3D" parent="."]

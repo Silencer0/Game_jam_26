@@ -86,7 +86,7 @@ func run_checks() -> void:
 	for actor in panels[0].arena.enemies.get_children():
 		actor.trainer.enabled = false
 	await clear_current_wave(0)
-	check(is_equal_approx(panels[2].arena.simulation_rate, 0.1), "Clearing all waves leaves unfinished panels at fixed inactive speed")
+	check(is_equal_approx(panels[2].arena.simulation_rate, 0.1), "Clearing the third wave leaves unfinished panels at fixed inactive speed")
 	page.select_panel(2)
 	check(is_equal_approx(panels[1].arena.simulation_rate, 0.1), "Inactive rate stays fixed regardless of which panel leads")
 	check(is_equal_approx(Engine.time_scale, 1.0), "Role flow remains local and leaves global time unchanged")

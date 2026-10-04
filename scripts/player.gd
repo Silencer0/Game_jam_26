@@ -54,7 +54,7 @@ func set_input_enabled(enabled: bool) -> void:
 	blocked_inputs.clear()
 	if enabled:
 		# Held buttons belong to the previous panel until released and pressed again.
-		for action in [&"jump", &"dash", &"light_attack", &"heavy_attack", &"parry"]:
+		for action in [&"jump", &"dash", &"light_attack", &"heavy_attack", &"parry", &"light_beam"]:
 			if Input.is_action_pressed(action) or Input.is_action_just_pressed(action):
 				blocked_inputs[action] = true
 	else:

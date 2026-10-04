@@ -4,7 +4,7 @@ extends "res://scripts/practice_target.gd"
 signal defeated
 
 @export var max_health: int = 6
-@export var approach_speed: float = 4.2
+@export var approach_speed: float = 3.0345
 var health: int = 6
 var dead: bool = false
 var hitstun_left: float = 0.0
@@ -48,12 +48,17 @@ func _physics_process(delta: float) -> void:
 		hitstun_left = maxf(0.0, hitstun_left - delta * simulation_rate)
 		if is_on_floor() and not slamming and hitstun_left <= 0.0:
 			velocity.x = 0.0
-			var opponent: CharacterBody3D = trainer.player
-			var offset: Vector3 = opponent.global_position - global_position
-			# Commit to the telegraphed direction; never track during a strike.
+						# Commit to the telegraphed direction; never track during a strike.
 			# Recovery delays the next strike, not pursuit. At inactive speed a
 			# 1.2-second recovery would otherwise freeze approach for 11–13 seconds.
 			var ready_to_move: bool = trainer.enabled and trainer.stagger_left <= 0.0 and trainer.windup_left <= 0.0 and trainer.active_left <= 0.0
-			if opponent.combat_enabled and not opponent.dead and ready_to_move and absf(offset.x) > 1.65:
-				velocity.x = signf(offset.x) * approach_speed
+			if ready_to_move:
+				velocity.x = approach_velocity()
 	super._physics_process(delta)
+
+func approach_velocity() -> float:
+	var opponent: CharacterBody3D = trainer.player
+	var offset: Vector3 = opponent.global_position - global_position
+	if opponent.combat_enabled and not opponent.dead and absf(offset.x) > 1.65:
+		return signf(offset.x) * approach_speed
+	return 0.0

@@ -1,8 +1,8 @@
 extends Control
-## Stage 7: temporal roles multiply local activity speed; twisting preserves state.
+## Stage 7: temporal roles set active speed; inactive clocks stay fixed; twisting preserves state.
 
 const ROLE_NAMES: Array[StringName] = [&"Past", &"Present", &"Future"]
-var native_flow_rates: Dictionary = {&"Past": 0.7, &"Present": 1.0, &"Future": 1.3}
+var native_flow_rates: Dictionary = {&"Past": 0.85, &"Present": 1.0, &"Future": 1.15}
 
 @export_range(0.01, 1.0) var inactive_simulation_rate: float = 0.10
 @export var max_health: int = 6
@@ -30,6 +30,8 @@ func _ready() -> void:
 	health = max_health
 	for index in range(panels.size()):
 		panels[index].arena.temporal_role = ROLE_NAMES[index]
+		panels[index].arena.get_node("TemporalInformation").session = self
+		panels[index].arena.get_node("LightBeams").session = self
 	for panel in panels:
 		panel.arena.player.health_owner = self
 		panel.arena.player.max_health = max_health
@@ -59,8 +61,7 @@ func _physics_process(_delta: float) -> void:
 
 func update_simulation_rates() -> void:
 	for index in range(panels.size()):
-		var rate: float = 1.0 if index == active_index else inactive_simulation_rate
-		rate *= float(native_flow_rates[panels[index].arena.temporal_role])
+		var rate: float = float(native_flow_rates[panels[index].arena.temporal_role]) if index == active_index else inactive_simulation_rate
 		if not is_equal_approx(panels[index].arena.simulation_rate, rate):
 			panels[index].set_simulation_rate(rate)
 
@@ -87,9 +88,12 @@ func update_timeline_readout() -> void:
 	for role in ROLE_NAMES:
 		for index in range(panels.size()):
 			if panels[index].arena.temporal_role == role:
-				entries.append("%s %.1f×: %d" % [String(role).to_upper(), float(native_flow_rates[role]), index + 1])
+				entries.append("%s %.2f×: %d" % [String(role).to_upper(), float(native_flow_rates[role]), index + 1])
 	timeline_readout.text = "   →   ".join(entries) + "    |    T: rotate roles   •   Y: swap Past/Future"
 	refresh_pause_menu()
+	for panel in panels:
+		panel.arena.get_node("TemporalInformation").refresh()
+		panel.arena.get_node("LightBeams").cancel_invalid_bolts()
 
 func select_panel(index: int) -> void:
 	if index < 0 or index >= panels.size() or index == active_index:
