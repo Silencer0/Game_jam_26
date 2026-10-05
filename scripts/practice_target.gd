@@ -11,7 +11,7 @@ var simulation_rate: float = 1.0
 var hit_stop_left: float = 0.0
 var hit_stopped: bool = false
 
-@onready var visual: MeshInstance3D = $Visual
+@onready var visual: Node3D = $Visual
 @onready var readout: Label3D = $Readout
 @onready var trainer: Node3D = $Trainer
 

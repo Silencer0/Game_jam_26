@@ -9,6 +9,9 @@ var target_arena: Node3D
 var direction: int = 1
 var source_panel: int = 1
 var age: float = 0.0
+var visual: MeshInstance3D
+var beam_mesh: QuadMesh
+var beam_material: ShaderMaterial
 var hit_targets: Dictionary = {}
 var shape := BoxShape3D.new()
 var wall_query := PhysicsShapeQueryParameters3D.new()
@@ -23,16 +26,16 @@ func _ready() -> void:
 	hit_query.collision_mask = 2
 	hit_query.collide_with_bodies = false
 	hit_query.collide_with_areas = true
-	var mesh := BoxMesh.new()
-	mesh.size = Vector3(1.5, 0.18, 0.22)
-	var material := StandardMaterial3D.new()
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.albedo_color = Color(0.9, 1.0, 0.55)
-	mesh.material = material
-	var visual := MeshInstance3D.new()
-	visual.mesh = mesh
-	visual.position.x = -float(direction) * 0.6
+	visual = MeshInstance3D.new()
+	beam_mesh = QuadMesh.new()
+	beam_mesh.size = Vector2(0.3, 0.48)
+	visual.mesh = beam_mesh
+	beam_material = ShaderMaterial.new()
+	beam_material.shader = preload("res://shaders/light_beam.gdshader")
+	visual.material_override = beam_material
 	visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	if direction < 0:
+		visual.rotation.z = PI
 	add_child(visual)
 
 func _physics_process(delta: float) -> void:
@@ -41,6 +44,7 @@ func _physics_process(delta: float) -> void:
 		return
 	delta *= arena.simulation_rate
 	age += delta
+
 	if age >= LIFETIME:
 		queue_free()
 		return
@@ -64,6 +68,11 @@ func _physics_process(delta: float) -> void:
 	var fraction: float = minf(fractions[0], target_fractions[0])
 	var travel: Vector3 = motion * fraction
 	global_position += travel
+	# A white-hot ray grows behind the travelling collision tip, not ahead of it.
+	var length: float = clampf(age * SPEED, 0.3, 4.5)
+	beam_mesh.size.x = length
+	visual.position.x = -float(direction) * length * 0.5
+	beam_material.set_shader_parameter("local_time", age)
 	sweep_shape.size = Vector3(absf(travel.x) + shape.size.x, shape.size.y, shape.size.z)
 	hit_query.transform = Transform3D(Basis.IDENTITY, target_start + travel * 0.5)
 	for overlap in target_space.intersect_shape(hit_query, 32):

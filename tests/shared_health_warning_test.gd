@@ -15,10 +15,11 @@ func run_checks() -> void:
 	check(panels[1].switch_hint.visible and panels[1].switch_hint.text == "2", "Red flash preserves the centered numeric switch marker")
 	panels[1].arena.player.receive_damage(1)
 	check(page.health == 4, "Each distinct damage event still removes one HP")
+	check(panels[1].damage_indicator_left > 1.5 and panels[1].frame.border_width_left == 8 and panels[1].impact_left > 0.0, "Repeated damage refreshes a thick border and impact frame")
 	page.select_panel(1)
 	check(not panels[1].danger and page.health == 4, "Selecting the struck panel hides red without restoring health")
 	page.select_panel(0)
-	await ticks(50)
+	await ticks(110)
 	check(not panels[1].danger and panels[1].frame.shadow_size == 0, "Confirmed-damage glow expires in real time despite inactive slowdown")
 
 	await fresh_page()
@@ -31,7 +32,7 @@ func run_checks() -> void:
 	check(page.health == 5 and panels[1].danger and panels[1].danger_tint.visible, "A real un-parried collision hit triggers red after HP decreases")
 	check(panels[1].frame.border_color.r > 0.9 and panels[1].frame.shadow_size > 0, "Confirmed damage produces a red border and glow")
 	actor.trainer.enabled = false
-	await ticks(50)
+	await ticks(110)
 	check(not panels[1].danger, "Real hit flash clears without requiring another panel visit")
 
 	await fresh_page()

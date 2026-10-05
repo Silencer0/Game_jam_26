@@ -11,28 +11,22 @@ var shape := BoxShape3D.new()
 var sweep := BoxShape3D.new()
 var wall_query := PhysicsShapeQueryParameters3D.new()
 var hit_query := PhysicsShapeQueryParameters3D.new()
-var material := StandardMaterial3D.new()
+var visual: Sprite3D
 
 func _ready() -> void:
 	shape.size = Vector3(0.25, 0.3, 0.6)
 	wall_query.shape = shape
 	wall_query.collision_mask = 1
 	hit_query.shape = sweep
-	var mesh := BoxMesh.new()
-	mesh.size = Vector3(0.55, 0.25, 0.35)
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.albedo_color = Color(1.0, 0.7, 0.15)
-	mesh.material = material
-	var visual := MeshInstance3D.new()
-	visual.mesh = mesh
-	visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	visual = preload("res://scripts/comic_effect_sprite.gd").new()
 	add_child(visual)
+	visual.set_pose(0, age, direction)
 
 func on_parried() -> void:
 	reflected = true
 	direction = arena.player.facing_direction
 	global_position = arena.player.global_position + Vector3(float(direction) * 0.85, 0.08, 0)
-	material.albedo_color = Color(0.9, 1.0, 0.55)
+	visual.set_pose(1, 0.0, direction)
 	age = 0.0
 
 func _physics_process(delta: float) -> void:
@@ -41,6 +35,7 @@ func _physics_process(delta: float) -> void:
 		return
 	delta *= arena.simulation_rate
 	age += delta
+	visual.set_pose(1 if reflected else 0, age, direction)
 	if age >= LIFETIME:
 		queue_free()
 		return

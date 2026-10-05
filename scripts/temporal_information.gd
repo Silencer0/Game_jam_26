@@ -1,40 +1,24 @@
 extends Node3D
 ## Shootable mirages mirror live enemies in the next temporal role exactly.
-## These meshes have no collision or simulation of their own.
+## These sprites have no collision or simulation of their own.
 
 const MAX_CUES: int = 6
 var session: Control
 var arena: Node3D
 var cues: Array[Node3D] = []
 var displayed: Array[Dictionary] = []
-var ghost_mesh := BoxMesh.new()
-var gold := StandardMaterial3D.new()
-var violet := StandardMaterial3D.new()
 
 func _ready() -> void:
 	arena = get_parent()
-	ghost_mesh.size = Vector3(0.9, 1.5, 0.9)
-	for material in [gold, violet]:
-		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	gold.albedo_color = Color(1.0, 0.8, 0.25, 0.38)
-	violet.albedo_color = Color(0.9, 0.35, 1.0, 0.38)
 	for index in range(MAX_CUES):
 		var cue := Node3D.new()
 		cue.visible = false
 		add_child(cue)
-		var visual := MeshInstance3D.new()
+		var visual := Sprite3D.new()
 		visual.name = "Mirage"
-		visual.mesh = null
-		for part_index in range(6):
-			var piece := MeshInstance3D.new()
-			var box := BoxMesh.new()
-			var positions: Array[Vector3] = [Vector3(0, 0, 0), Vector3(0, 0.55, 0), Vector3(-0.22, -0.48, 0), Vector3(0.22, -0.48, 0), Vector3(0.5, 0, 0), Vector3(-0.5, 0, 0)]
-			box.size = Vector3(0.62, 0.58, 0.5) if part_index == 0 else (Vector3(0.5, 0.38, 0.5) if part_index == 1 else Vector3(0.22, 0.42, 0.3))
-			piece.mesh = box
-			piece.position = positions[part_index]
-			piece.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-			visual.add_child(piece)
+		visual.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		visual.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+		visual.shaded = false
 		visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		cue.add_child(visual)
 		var label := Label3D.new()
@@ -51,6 +35,7 @@ func _process(_delta: float) -> void:
 	refresh()
 
 func refresh() -> void:
+	var tint := Color(1.0, 0.85, 0.5, 0.55) if arena.temporal_role == &"Past" else Color(0.95, 0.6, 1.0, 0.55)
 	displayed.clear()
 	if is_instance_valid(session) and arena.result == &"fighting" and arena.temporal_role != &"Future":
 		var target_role: StringName = &"Present" if arena.temporal_role == &"Past" else &"Future"
@@ -68,6 +53,20 @@ func refresh() -> void:
 			continue
 		var mirage: Dictionary = displayed[index]
 		cue.position = mirage.position
-		for piece in cue.get_node("Mirage").get_children():
-			piece.material_override = gold if arena.temporal_role == &"Past" else violet
 		cue.get_node("Source").text = str(mirage.source_panel)
+		var enemy: Node3D = instance_from_id(mirage.enemy_id) as Node3D
+		if not is_instance_valid(enemy):
+			cue.visible = false
+			continue
+		var source: Sprite3D = enemy.visual.sprite
+		var visual: Sprite3D = cue.get_node("Mirage")
+		visual.frame = 0
+		visual.texture = source.texture
+		visual.hframes = source.hframes
+		visual.vframes = source.vframes
+		visual.frame = source.frame
+		visual.flip_h = source.flip_h
+		visual.pixel_size = source.pixel_size
+		visual.position = source.position
+		visual.scale = enemy.visual.scale
+		visual.modulate = tint

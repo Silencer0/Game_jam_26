@@ -14,21 +14,26 @@ Stage 9 adds forward light beams. Stage 10 introduces the first ranged enemy. Ot
 Open `project.godot` and run `main.tscn` (F5).
 The viewport is 1280×720. The Web preset exports to `build/index.html`.
 
-## Stage 13: first comic visual pass
+## Stage 13: comic visual pass
 
-Stage 13 was explicitly brought forward while remaining enemy types, long-form
-progression, and the boss are deferred. This pass introduces cyan/orange/green
-articulated robot silhouettes, flat shading and mesh ink outlines, an industrial
-reactor hangar with licensed Kenney set dressing, halftone page background, bold
-Kenney display typography, heavier active frames, dash streaks, slash shapes,
-and bounded hit/parry impact lettering. Mirage targets now have robot silhouettes.
-Existing collision geometry, movement/combat timings, wave counts, temporal clocks,
-role colors, damage-only red flashes, and shared green health are preserved.
+Stage 13 was brought forward while further enemy variety, long-form progression,
+and the boss remain deferred. Current work focuses on the **environment first**:
+an open industrial rooftop with cream deck panels, teal pipes, red service buildings,
+colored cel shadows, fine ink outlines, a blue sky and layered pale city silhouettes.
+The lane remains clear; distant details use lower contrast and no heavy outlines.
 
-Assets are local and their original CC0 licenses are included; see CREDITS.md.
-No postprocessing, dynamic lights, shadow maps, or unbounded particles were added.
-This establishes the comic visual direction rather than completing final animation
-or bespoke character art. Browser frame pacing and readability need hands-on review.
+Player/enemies use one original Dead Cells-inspired ember sprite family: a
+magenta/cyan swordsman, orange/plum melee revenant, and violet/green carbine revenant.
+Their generated transparent sheets contain 104 frames across movement, combat,
+damage and defeat states; mirages copy the real enemy's current sprite pose.
+See docs/SPRITE_ANIMATION_MAP.md and docs/EMBER_SPRITE_PROMPTS.md for mapping and
+generation details. The existing toon 3D environment and 2.5D collisions remain.
+Movement, collision geometry, combat timings, waves, clocks and shared health are
+preserved. The three viewports use 2× MSAA; static scenery is batched by material.
+
+See docs/ANIME_RENDERING.md for references, implementation and limitations, and
+CREDITS.md for free asset credits. Web frame pacing and aesthetic acceptance still
+require manual review. No screen-space postprocessing is required.
 
 ## Controls
 

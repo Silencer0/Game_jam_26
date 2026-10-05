@@ -157,7 +157,7 @@ func run_checks() -> void:
 	await ticks(60)
 	var camera_offset: Vector3 = camera.position - Vector3(player.position.x, 3.6, 0.0)
 	var yaw_degrees: float = rad_to_deg(atan2(camera_offset.x, camera_offset.z))
-	var pitch_change: float = rad_to_deg(atan2(camera_offset.y, Vector2(camera_offset.x, camera_offset.z).length()) - atan2(2.5, 20.0))
+	var pitch_change: float = rad_to_deg(atan2(camera_offset.y, Vector2(camera_offset.x, camera_offset.z).length()) - atan2(camera.base_elevation, 20.0))
 	check(yaw_degrees > camera.mouse_yaw_degrees * 0.9 and yaw_degrees <= camera.mouse_yaw_degrees + 0.01 and absf(pitch_change) <= camera.mouse_pitch_degrees + 0.01, "Mouse orbit is bounded to small yaw and pitch angles")
 	check(is_zero_approx(player.position.z), "Mouse camera tilt never changes the player depth plane")
 	camera.notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)

@@ -4,11 +4,7 @@ extends "res://scripts/melee_grunt.gd"
 func _ready() -> void:
 	super._ready()
 	trainer.rest_left = 1.0
-	var material := StandardMaterial3D.new()
-	material.albedo_color = Color(0.45, 0.8, 0.25)
-	material.roughness = 1.0
-	visual.material_override = material
-	visual.scale = Vector3(0.85, 1.05, 0.85)
+	visual.scale = Vector3.ONE
 	readout.text = "GUNNER %d / %d" % [health, max_health]
 
 func receive_melee_hit(damage: int, direction: int, kind: StringName = &"ground_light") -> void:

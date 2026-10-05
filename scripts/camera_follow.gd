@@ -1,6 +1,8 @@
 extends Camera3D
 ## Orthographic side view with slight elevation to expose placeholder depth.
 
+@export var base_elevation: float = 5.2
+@export var threat_focus: bool = false
 @export var mouse_enabled: bool = true
 @export var arena_width: float = 48.0
 @export var target_path: NodePath = NodePath("../Player")
@@ -43,7 +45,9 @@ func update_follow() -> void:
 		clampf(target.position.y + 2.3, 3.6, 6.5),
 		0.0
 	)
-	var offset: Vector3 = Vector3(0.0, 2.5, 20.0)
+	if threat_focus:
+		focus = Vector3(target.position.x, maxf(1.7, target.position.y + 0.65), 0.0)
+	var offset: Vector3 = Vector3(0.0, base_elevation, 20.0)
 	offset = offset.rotated(Vector3.RIGHT, deg_to_rad(mouse_tilt.y * mouse_pitch_degrees))
 	offset = offset.rotated(Vector3.UP, deg_to_rad(mouse_tilt.x * mouse_yaw_degrees))
 	position = focus + offset

@@ -1,0 +1,13 @@
+Quaternius — Ultimate Space Kit
+CC0 1.0 Universal (Public Domain)
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Creator license statement: https://quaternius.com/faq.html
+“All models are under the CC0 License.” Free commercial, educational and personal use.
+
+Downloaded from Poly Pizza on 2026-10-04:
+Mech: https://poly.pizza/m/tLs9mFVCSU
+Metal Support: https://poly.pizza/m/ZyUjmgnTyw
+Roof Radar: https://poly.pizza/m/V7XQDxF8JC
+Each model page identifies Quaternius and CC0 1.0.
+Original GLB files retained; project material overrides and size normalization are runtime adaptations.

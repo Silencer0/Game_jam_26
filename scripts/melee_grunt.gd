@@ -8,16 +8,13 @@ signal defeated
 var health: int = 6
 var dead: bool = false
 var hitstun_left: float = 0.0
+var death_visible_left: float = 0.72
 
 func _ready() -> void:
 	super._ready()
 	health = max_health
 	trainer.enabled = true
 	trainer.rest_left = 0.0 # Start approaching without an initial recovery wait.
-	var material: StandardMaterial3D = StandardMaterial3D.new()
-	material.albedo_color = Color(1.0, 0.48, 0.16)
-	material.roughness = 1.0
-	visual.material_override = material
 	readout.text = "GRUNT %d / %d" % [health, max_health]
 
 func receive_melee_hit(damage: int, direction: int, kind: StringName = &"ground_light") -> void:
@@ -35,13 +32,13 @@ func receive_melee_hit(damage: int, direction: int, kind: StringName = &"ground_
 		$Hurtbox.set_deferred("collision_layer", 0)
 		defeated.emit()
 		# A lethal air finisher still completes its visible diagonal ground slam.
-		if kind != &"air_finisher":
-			queue_free()
+		death_visible_left = 0.72
 
 func _physics_process(delta: float) -> void:
 	if dead:
 		super._physics_process(delta)
-		if is_on_floor() and not slamming:
+		death_visible_left -= delta * simulation_rate
+		if death_visible_left <= 0.0 and is_on_floor() and not slamming:
 			queue_free()
 		return
 	if hit_stop_left <= 0.0:

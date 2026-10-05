@@ -7,12 +7,14 @@ var window_left: float = 0.0
 var cooldown_left: float = 0.0
 var input_buffer_left: float = 0.0
 var successes: int = 0
+var success_visual_left: float = 0.0
 
 @onready var player: CharacterBody3D = get_parent()
 @onready var guard: MeshInstance3D = $Guard
 
 func _physics_process(delta: float) -> void:
 	delta *= player.simulation_rate
+	success_visual_left = maxf(0.0, success_visual_left - delta)
 	if not player.combat_enabled:
 		window_left = 0.0
 		guard.visible = false
@@ -44,6 +46,7 @@ func try_parry(attacker: Node3D) -> bool:
 	guard.visible = false
 	cooldown_left = 0.0
 	successes += 1
+	success_visual_left = 0.18
 	player.melee.cancel_attack()
 	# Successful defense immediately gives back offensive initiative.
 	player.melee.combo_cooldown_left = 0.0
