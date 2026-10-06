@@ -1,0 +1,13 @@
+# ADD meter and sound-design pass
+
+ADD has two five-segment banks: one buys an adjacent role exchange; both buy Past/Future. Exact total remains visible and uncapped. Segments ease as ADD is earned or spent.
+
+38 selected short audio clips from the user's packs cover button hover/focus/click, pause, drag, rejected/accepted role changes, panel selection, jumps, dashes, player/enemy footsteps, landing, attack live windows, real impacts, ground slam, guard/parry success, enemy windup/shooting, damage/death, meter collection/readiness, dilation start/stop, waves, defeat, victory and restart. Enemy footstep cadence follows actual distance travelled; inactive arenas are attenuated by 18 dB and damage alerts remain audible. A fixed 24-voice pool, priorities, global throttles and native pitch variation prevent uncontrolled layering. Combat audio stops in pause; interface feedback continues. Sounds never alter gameplay clocks or scores.
+
+The selected runtime audio is 378,446 bytes. Pixel Combat sources each contain several variations: only the first variation is used, with leading/trailing silence removed. Source mapping and preparation details are in `assets/audio/SOURCES.json` and `tools/prepare_sound_assets.py`; credits were updated. The original 4.8 GB downloads remain untouched and excluded from import/export via `sound/.gdignore`.
+
+Seven focused suites passed: sound_design (63), player_movement (28), player_melee (23), ranged_enemy (26), wave_combat (30), frame_shift_followup (26), manga_ui (36): **232 assertions**, no gameplay engine errors or warnings. Headless checks validate sample loading and event routing without starting audio decoders on the dummy device. Godot MCP startup passed and the final main scene was launched.
+
+The exported Chromium audio check passed: AudioContext unlocked through real input, and measured nonzero output for jump, dash, attack, parry, panel switching, pause and controls. Initial 400 ms probes missed delayed output; disabling Chromium's audio muting, calibrating the analyser and observing a 1.2-second interval resolved the test. No screenshots or visual inspection were performed. This checks functional output, not an artistic listening review or precise end-to-end audio latency on every device.
+
+Players use Stream playback for the mixer/limiter. Godot documents increased Web latency for Stream on single-threaded exports; this remains a sound-timing tuning consideration, with gameplay clocks unchanged: [official Web audio documentation](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_web.html#audio-playback).

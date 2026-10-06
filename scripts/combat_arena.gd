@@ -4,6 +4,9 @@ extends Node3D
 const ENEMY_SCENE: PackedScene = preload("res://scenes/melee_grunt.tscn")
 const RANGED_SCENE: PackedScene = preload("res://scenes/ranged_enemy.tscn")
 var WAVE_SIZES: Array[int] = [1, 2, 3] # Preserved standalone encounter.
+@export var temporal_managed: bool = false
+var causal_ledger: Node
+var panel_index: int = -1
 @export var restart_enabled: bool = true
 @export var ranged_enemies_enabled: bool = false
 
@@ -24,11 +27,12 @@ func _ready() -> void:
 	if ranged_enemies_enabled:
 		WAVE_SIZES = [1, 2, 1, 2]
 	player.defeated.connect(on_player_defeated)
-	spawn_wave() # All panels begin with an encounter before local slowdown applies.
+	if not temporal_managed:
+		spawn_wave() # All panels begin with an encounter before local slowdown applies.
 
-func set_simulation_rate(rate: float) -> void:
+func set_simulation_rate(rate: float, player_rate: float = -1.0) -> void:
 	simulation_rate = clampf(rate, 0.01, 1.15)
-	player.simulation_rate = simulation_rate
+	player.simulation_rate = simulation_rate if player_rate < 0.0 else player_rate
 	for enemy in enemies.get_children():
 		enemy.simulation_rate = simulation_rate
 
@@ -41,7 +45,7 @@ func _physics_process(delta: float) -> void:
 	delta *= simulation_rate
 	if result != &"fighting":
 		return
-	if enemies_alive == 0:
+	if not temporal_managed and enemies_alive == 0:
 		next_wave_left = maxf(0.0, next_wave_left - delta)
 		if next_wave_left <= 0.0:
 			spawn_wave()
@@ -64,14 +68,31 @@ func spawn_wave() -> void:
 			spawn_x = clampf(player.position.x - side * 7.0, 2.0, 30.0)
 		enemy.position = Vector3(spawn_x, 0.8, 0.0)
 		enemy.simulation_rate = simulation_rate
-		enemy.defeated.connect(on_enemy_defeated)
+		enemy.defeated.connect(on_enemy_defeated.bind(enemy))
 		enemies.add_child(enemy)
+		$ComicFeedback.track_enemy(enemy)
 		enemies_alive += 1
 
-func on_enemy_defeated() -> void:
+func add_enemy(id: int, species: StringName, at: Vector3, difficulty: Dictionary = {}) -> CharacterBody3D:
+	var enemy: CharacterBody3D = (RANGED_SCENE if species == &"gunner" else ENEMY_SCENE).instantiate()
+	enemy.temporal_id = id
+	enemy.position = at
+	enemy.simulation_rate = simulation_rate
+	enemy.get_node("Trainer").show_debug_text = not temporal_managed
+	if not difficulty.is_empty():
+		enemy.configure_difficulty(difficulty)
+	enemy.defeated.connect(on_enemy_defeated.bind(enemy))
+	enemies.add_child(enemy)
+	$ComicFeedback.track_enemy(enemy)
+	enemies_alive += 1
+	return enemy
+
+func on_enemy_defeated(enemy: CharacterBody3D = null) -> void:
 	enemies_alive -= 1
 	defeated_count += 1
-	if enemies_alive == 0:
+	if causal_ledger != null and enemy != null:
+		causal_ledger.on_enemy_died(enemy, panel_index)
+	if not temporal_managed and enemies_alive == 0:
 		next_wave_left = 1.0
 
 func on_player_defeated() -> void:

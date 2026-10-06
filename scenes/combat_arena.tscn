@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player.tscn" id="1"]
 [ext_resource type="Script" path="res://scripts/camera_follow.gd" id="2"]
@@ -6,9 +6,7 @@
 [ext_resource type="Script" path="res://scripts/combat_arena.gd" id="3"]
 
 
-[ext_resource type="Script" path="res://scripts/temporal_information.gd" id="4"]
 
-[ext_resource type="Script" path="res://scripts/light_beam_system.gd" id="5"]
 
 [ext_resource type="Script" path="res://scripts/comic_arena.gd" id="6"]
 [ext_resource type="Script" path="res://scripts/comic_feedback.gd" id="7"]
@@ -129,13 +127,6 @@ offset_left = 24.0
 offset_top = 112.0
 theme_override_font_sizes/font_size = 20
 text = "First wave incoming..."
-
-[node name="TemporalInformation" type="Node3D" parent="."]
-script = ExtResource("4")
-
-[node name="LightBeams" type="Node3D" parent="."]
-process_physics_priority = 4
-script = ExtResource("5")
 
 [node name="EnemyProjectiles" type="Node3D" parent="."]
 

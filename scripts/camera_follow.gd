@@ -10,6 +10,7 @@ extends Camera3D
 @export var mouse_pitch_degrees: float = 4.5
 @export var mouse_tilt_response: float = 8.0
 
+var zoom_target: float = -1.0
 var mouse_tilt_target: Vector2 = Vector2.ZERO
 var mouse_tilt: Vector2 = Vector2.ZERO
 @onready var target: Node3D = get_node(target_path)
@@ -32,6 +33,8 @@ func _notification(what: int) -> void:
 
 func _physics_process(delta: float) -> void:
 	# Frame-rate independent easing; no pointer capture or gameplay-plane rotation.
+	if zoom_target > 0.0:
+		size = lerpf(size, zoom_target, 1.0 - exp(-10.0 * delta))
 	mouse_tilt = mouse_tilt.lerp(mouse_tilt_target, 1.0 - exp(-mouse_tilt_response * delta))
 	update_follow()
 

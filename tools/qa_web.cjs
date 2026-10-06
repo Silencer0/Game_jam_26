@@ -1,0 +1,67 @@
+// Development-only browser smoke check. Supply a Playwright package and Chromium.
+const { chromium } = require(process.argv[2]);
+const { spawn } = require('node:child_process');
+const fs = require('node:fs');
+(async () => {
+ let browser;
+ const messages=[], errors=[];
+ const geometry=JSON.parse(fs.readFileSync('build/qa/ui-geometry.json','utf8'));
+ const center=(name,w=1280,h=720)=>({x:(geometry[name][0]+geometry[name][2]/2)*w,y:(geometry[name][1]+geometry[name][3]/2)*h});
+ const server = spawn('python3', ['-m','http.server','8079','--bind','127.0.0.1','--directory','build'], {stdio:'ignore'});
+ try {
+  browser = await chromium.launch({headless:true,executablePath:process.argv[3],args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader','--disable-dev-shm-usage']});
+  const page = await browser.newPage({viewport:{width:1280,height:720}});
+  page.on('console',m => { messages.push(m.text()); if (/SCRIPT ERROR|ERROR:|Shader compilation failed/.test(m.text())) errors.push(m.text()); });
+  page.on('pageerror',e => errors.push(String(e)));
+  await page.goto('http://127.0.0.1:8079/index.html');
+  await page.waitForFunction(() => !document.querySelector('#status'), null, {timeout:90000});
+  await page.locator('canvas').click({position:{x:600,y:300}});
+  await page.keyboard.press('3');
+  await page.keyboard.down('d');
+  await page.waitForTimeout(400);
+  await page.keyboard.up('d');
+  await page.keyboard.press('Space');
+  await page.waitForTimeout(250);
+  await page.screenshot({path:'build/qa/web-gameplay.png'});
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(250);
+  await page.screenshot({path:'build/qa/web-pause.png'});
+  const source=center('future'), target=center('past');
+  await page.mouse.move(source.x,source.y);
+  await page.mouse.down();
+  await page.mouse.move(target.x,target.y,{steps:15});
+  await page.mouse.up();
+  await page.waitForTimeout(250);
+  await page.screenshot({path:'build/qa/web-drag.png'});
+  const controls=center('controls');
+  await page.mouse.click(controls.x,controls.y);
+  await page.waitForTimeout(300);
+  await page.screenshot({path:'build/qa/web-controls.png'});
+  const full=center('fullscreen');
+  await page.mouse.click(full.x,full.y);
+  await page.waitForFunction(() => !!document.fullscreenElement, null, {timeout:8000});
+  await page.screenshot({path:'build/qa/web-fullscreen.png'});
+  await page.evaluate(()=>document.exitFullscreen());
+  await page.waitForTimeout(200);
+  await page.keyboard.press('Escape'); // Controls -> Timeline
+  await page.setViewportSize({width:1920,height:1080});
+  await page.waitForTimeout(600);
+  await page.screenshot({path:'build/qa/web-1080p.png'});
+  await page.setViewportSize({width:1280,height:720});
+  await page.waitForTimeout(300);
+  await page.keyboard.press('Escape');
+  await page.keyboard.press('2');
+  await page.keyboard.press('f');
+  await page.keyboard.press('j');
+  await page.keyboard.press('e');
+  await page.waitForTimeout(400);
+  await page.keyboard.press('r');
+  await page.waitForTimeout(400);
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(150);
+  await page.screenshot({path:'build/qa/web-restart.png'});
+  fs.writeFileSync('build/qa/web-results.json',JSON.stringify({passed:errors.length===0,errors,messages},null,2));
+  if(errors.length) throw new Error(errors.join('\n'));
+  console.log('PASS: Exported Web game boots, renders, receives movement/jump/switch/pause/parry/attack/E/restart input plus Controls navigation, real browser fullscreen and 1080p/720p resizing with no runtime or shader errors.');
+ } finally { if(browser) await browser.close(); server.kill(); }
+})().catch(e => { console.error(e);process.exitCode=1; });

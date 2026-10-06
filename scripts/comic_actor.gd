@@ -28,7 +28,6 @@ const PLAYER_ANIMATIONS := {
 	"parry_hit": ["movement", 4, 2, 2, false],
 	"hurt": ["movement", 5, 0, 4, false],
 	"death": ["movement", 6, 0, 4, false],
-	"beam": ["movement", 7, 0, 4, false],
 	"attack": ["combat", 0, 0, 4, false],
 	"attack_2": ["combat", 1, 0, 4, false],
 	"attack_3": ["combat", 2, 0, 4, false],
@@ -47,8 +46,6 @@ var current_animation := ""
 var animation_time := 0.0
 var ascent_time := 0.0
 var last_velocity_y := 0.0
-var beam_pose_left := 0.0
-var last_beam_shots := 0
 var attack_visual_left := 0.0
 var last_enemy_shots := 0
 
@@ -78,6 +75,15 @@ func _ready() -> void:
 	set_animation("idle")
 	if identity != 0 and actor.has_signal("defeated"):
 		actor.get_node("Readout").visible = false
+		if actor.temporal_id > 0:
+			var identity_label := Label3D.new()
+			identity_label.text = "#%02d" % actor.temporal_id
+			identity_label.font_size = 24
+			identity_label.pixel_size = 0.012
+			identity_label.position.y = 1.3
+			identity_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+			identity_label.outline_size = 6
+			add_child(identity_label)
 		health_fill = MeshInstance3D.new()
 		var bar := BoxMesh.new()
 		bar.size = Vector3(0.6, 0.035, 0.03)
@@ -118,7 +124,6 @@ func _process(delta: float) -> void:
 	else:
 		delta *= float(actor.get("simulation_rate"))
 	animation_time += delta
-	beam_pose_left = maxf(0.0, beam_pose_left - delta)
 	attack_visual_left = maxf(0.0, attack_visual_left - delta)
 	if not actor.is_on_floor() and actor.velocity.y > 0.0:
 		if actor.velocity.y > last_velocity_y + 2.0:
@@ -127,12 +132,7 @@ func _process(delta: float) -> void:
 	else:
 		ascent_time = 0.0
 	last_velocity_y = actor.velocity.y
-	if identity == 0:
-		var beams: Node = actor.get_parent().get_node_or_null("LightBeams")
-		if beams != null and beams.shots_fired != last_beam_shots:
-			last_beam_shots = beams.shots_fired
-			beam_pose_left = 0.22
-	else:
+	if identity != 0:
 		var trainer: Node3D = actor.get_node("Trainer")
 		if trainer.active_left > 0.0:
 			attack_visual_left = 0.18
@@ -145,8 +145,6 @@ func _process(delta: float) -> void:
 	var fps := 12.0 if current_animation != "idle" else 6.0
 	if current_animation == "hurt":
 		fps = 32.0
-	elif current_animation == "beam":
-		fps = 20.0
 	elif current_animation == "death":
 		fps = 8.0
 	var index := int(animation_time * fps)
@@ -191,8 +189,6 @@ func choose_animation() -> String:
 			return ["attack", "attack_2", "attack_3"][mini(melee.combo_index, 2)]
 		if float(actor.get("dash_time_left")) > 0.0:
 			return "dash"
-		if beam_pose_left > 0.0:
-			return "beam"
 	else:
 		if float(actor.get("feedback_time_left")) > 0.0:
 			return "hurt"

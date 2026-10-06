@@ -1,12 +1,15 @@
-extends "res://tests/player_stage6_test.gd"
+extends "res://tests/causal_test_base.gd"
 
 var gunner: CharacterBody3D
 var gunner_arena: Node3D
 
 func fresh_gunner(index: int = 0) -> void:
-	await fresh_page()
+	await fresh()
+	populate()
+	page.native_flow_rates = {&"Past": 1.0, &"Present": 1.0, &"Future": 1.0}
+	page.update_simulation_rates()
 	page.select_panel(index)
-	gunner_arena = panels[index].arena
+	gunner_arena = page.panels[index].arena
 	for actor in gunner_arena.enemies.get_children():
 		actor.position.x = 26
 	gunner = load("res://scenes/ranged_enemy.tscn").instantiate()
@@ -138,41 +141,6 @@ func run_checks() -> void:
 	await ticks(6)
 	check(absf(bolt.position.x - x + 0.4) < 0.03, "Selecting arena immediately resumes native projectile motion")
 
-	await fresh_page()
-	for actor in panels[0].arena.enemies.get_children():
-		actor.receive_melee_hit(100, 1)
-	await ticks(65)
-	check(panels[0].arena.wave == 2 and panels[0].arena.enemies_alive == 2 and panels[0].arena.enemies.get_child(0).get_script() == load("res://scripts/melee_grunt.gd") and panels[0].arena.enemies.get_child(1).get_script() == load("res://scripts/melee_grunt.gd"), "Wave 2 has exactly two regular enemies")
-	for actor in panels[0].arena.enemies.get_children():
-		actor.receive_melee_hit(100, 1)
-	await ticks(65)
-	check(panels[0].arena.wave == 3 and panels[0].arena.enemies_alive == 1 and panels[0].arena.enemies.get_child(0).get_script() == load("res://scripts/ranged_enemy.gd"), "Wave 3 contains only one shooter")
-
-	for actor in panels[0].arena.enemies.get_children():
-		actor.receive_melee_hit(100, 1)
-	await ticks(65)
-	check(panels[0].arena.wave == 4 and panels[0].arena.enemies_alive == 2 and panels[0].arena.enemies.get_child(0).get_script() == load("res://scripts/melee_grunt.gd") and panels[0].arena.enemies.get_child(1).get_script() == load("res://scripts/ranged_enemy.gd"), "Wave 4 has one regular enemy and one shooter")
-	for actor in panels[0].arena.enemies.get_children():
-		actor.receive_melee_hit(100, 1)
-	await ticks(65)
-	check(panels[0].arena.result == &"victory" and panels[0].arena.defeated_count == 6, "Clearing the fourth wave ends the six-enemy encounter")
-
-	await fresh_gunner(1)
-	var info: Node3D = panels[0].arena.get_node("TemporalInformation")
-	info.refresh()
-	var found: bool = false
-	for mirage in info.displayed:
-		found = found or mirage.enemy_id == gunner.get_instance_id()
-	check(found, "Gunner appears as an exact next-role shootable mirage")
-	page.select_panel(0)
-	gunner.position.x = 8
-	panels[0].arena.player.position.x = 6
-	panels[1].arena.enemies.get_child(0).position.x = 20
-	await ticks(2)
-	panels[0].arena.get_node("LightBeams").fire()
-	await ticks(15)
-	check(gunner.health == 4, "Visible light beam hitting gunner mirage damages its real body")
-
 	await fresh_gunner()
 	for i in range(12):
 		gunner.trainer.shoot()
@@ -180,11 +148,12 @@ func run_checks() -> void:
 	gunner_arena.player.receive_damage(100)
 	await ticks(2)
 	check(gunner_arena.get_node("EnemyProjectiles").get_child_count() == 0, "Defeat removes all hostile projectiles")
-	await key(KEY_R)
+	key(KEY_R, true)
+	await ticks(1)
+	key(KEY_R, false)
 	await ticks(80)
 	page = current_scene
-	panels = page.panels
-	check(page.health == 6 and panels[0].arena.wave == 1 and panels[0].arena.get_node("EnemyProjectiles").get_child_count() == 0, "Restart restores the original first wave and clean projectile state")
+	check(page.health == 6 and page.ledger.records.size() == 1 and page.panels[0].arena.get_node("EnemyProjectiles").get_child_count() == 0, "Restart restores Future-only spawning and clean projectile state")
 	check(is_equal_approx(Engine.time_scale, 1.0), "Ranged combat never changes global time scale")
 	await fresh_gunner()
 	gunner.trainer.enabled = true
@@ -194,15 +163,17 @@ func run_checks() -> void:
 	await fresh_gunner(1)
 	page.select_panel(0)
 	bolt = shot()
-	check(not panels[1].danger, "Hostile projectile before contact gives no red damage indicator")
+	check(not page.panels[1].danger, "Hostile projectile before contact gives no red damage indicator")
 	for tick in range(180):
 		if page.health < 6:
 			break
 		await ticks(1)
-	check(page.health == 5 and panels[1].danger and not panels[0].danger and not panels[2].danger, "Inactive projectile hit reduces shared health and flashes only the damaged panel")
+	check(page.health == 5 and page.panels[1].danger and not page.panels[0].danger and not page.panels[2].danger, "Inactive projectile hit reduces shared health and flashes only the damaged panel")
 	await fresh_gunner()
 	gunner_arena.player.facing_direction = 1
-	await tap("parry")
+	Input.action_press("parry")
+	await ticks(1)
+	Input.action_release("parry")
 	await ticks(10)
 	bolt = shot()
 	bolt._physics_process(0.25)

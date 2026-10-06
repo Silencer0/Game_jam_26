@@ -21,7 +21,8 @@ Genshin Impact character finish and Hi-Fi Rush action readability:
 - three live comic panels
 - thick panel borders
 - active panel clearly emphasized
-- panels snap/resize when switching
+- one broad upper active frame, two close-camera lower frames with a true diagonal ink gutter
+- panels ease their geometry and camera framing when switching
 - borders react to heavy impacts
 - impact typography for strong hits
 
@@ -37,14 +38,14 @@ Genshin Impact character finish and Hi-Fi Rush action readability:
 ## Temporal Identity
 Past:
 - slightly subdued / warmer feeling
-- future-position mirages visible
+- warm role accent and reverse chevron icon
 
 Present:
 - neutral visual treatment
 
 Future:
 - sharper/brighter feeling
-- ghost movement traces
+- violet role accent and forward chevron icon
 
 These are visual identifiers, not strict color requirements yet.
 
@@ -71,45 +72,30 @@ Avoid:
 - Retain shadows and real 3D depth without expensive screen-space effects.
 
 
-## Current focus: environment first
-Use the supplied Hi-Fi Rush rooftop screenshots as the environment reference.
-Open sky, painted cream/teal/red industrial surfaces, discrete violet shadows,
-restrained ink lines, and a blue sky with subtle printed halftone dots. Show floor depth with a more
-elevated side camera. Characters now use the original ember sprite family: magenta/cyan
-swordsman, orange/plum melee revenant, and violet/green carbine revenant. Mirages copy
-the real enemy sprite frame rather than using primitive capsules.
+## Current presentation
 
-Service-wall details should form small clusters around equipment: inset vents,
-maintenance hatches, conduit clamps and painted unit numbers. Use red-brown seams
-and localized diagonal hatching, not full-surface noise. Keep ink strokes filtered
-at inactive-panel sizes. Preserve broad quiet red paint between these clusters
-and leave the central combat lane clear. The accepted camera angle stays intact.
+Accepted toon industrial rooftop: cream deck, teal pipes, red service buildings,
+angular cel shadows, selective ink/hatching and a complete comic city panorama.
+Continuous rear railings attach to the fight deck; screens and street lamps have
+visible floor supports. The large charcoal rear structure has been removed.
 
-Lived-in details follow depth: service balconies behind the stage, utility
-displays fastened to the charcoal facade, short grass tufts and
-stones at the foreground deck lip (positive Z, in front of the player plane).
-The distant skyscrapers, spires and cloud slabs are removed. Shadow hatching
-is world-anchored and fades before it becomes subpixel noise. Screens have brief,
-low-contrast interference, never full-screen flashes or gameplay warning colors.
+Original Rift Courier hero uses an ivory prism helmet, indigo armor, split coat,
+teal boots and violet cleaver. Enemy spirits use distinct melee/gunner silhouettes.
+Characters have grounded inked contact shadows; their bodies and shadows remain
+on actual 3D floor geometry. Generated art provenance is in CREDITS.md and AI_USAGE.md.
 
-Avoid mirrored prop clusters: cargo and a taller signal lamp on the left; a utility
-tank and shorter lamp on the right. The lamp posts stand on the main deck with
-wide feet and continuous columns; screens bolt to the rear facade. Props need
-visible supports. Use broader, more widely spaced shadow hatch strokes rather than dense
-fine stripes; preserve the existing filtering and quiet central combat lane.
+The UI uses printed-paper gutters, heavy manga frame borders, a green shared health
+bar, gold ADD and violet MULT. Inactive cameras concentrate on the player and nearby
+threats. Skyline drift adds subtle depth behind the stage. Brief impact frames and
+red borders indicate actual damage; windups do not trigger red.
 
-Lighting uses a lower-angle warm sun, restrained cool ambient fill, warm/cool lamp
-pools and a small green screen spill. Local lights must multiply attenuation so
-unlit surfaces stay dark; keep the sun as the only shadow-map light for Web.
-Street lamps need luminous front/side faces visible to the elevated camera, with
-their spotlights emerging from the same fixture. Rear railings sit on the roof
-of a continuous charcoal utility building; retain the blue sky above it.
+The pause ledger uses matching enemy portraits/IDs linked by strings, faded portraits
+with X for deaths and a dash for an unborn representation. This replaces all mirages
+and player light-beam visuals. Dilation closes role gaps toward a single final frame.
+Keep the gameplay lane readable and avoid extra screen-space effects or noisy details.
 
-The charcoal roofline must project above the red service roofs in the camera view;
-depth and height both affect this. The rear railings align with visible piers on
-the charcoal facade. Build lamp silhouettes as continuous floor plate, plinth,
-mast, arm and lantern, with a contact mark on the deck. Fasten screens to a
-visible wall with brackets. Every prop needs an evident supporting surface.
-For the side camera, street-lamp arms must extend along X; an arm extending
-only in Z overlaps its pole in projection. Dark support masses need enough value
-contrast to remain visible below the sky and between the red service buildings.
+## 1080p manga combat interface
+
+The 1920×1080 canvas has no detached gameplay header or stock progress bars. A single vector-drawn HUD overlays the active frame: segmented green health blade, amber ADD ribbon, violet three-charge MULT strip, exact counters and a compact gap diagram. Direct and contradiction deaths send bounded ink fragments into the corresponding meter; automatic causal removals never imitate rewards. Every actual hit has a pooled floating number showing final attack damage, including overkill. Native fullscreen is the default; browser fullscreen uses a deliberate input on the Controls page.
+
+Pause is a dark halftone issue spread with offset paper cover edges and slanted buttons. Timeline contains role drags and linked portraits; Field Manual contains all bindings and fullscreen. Preserve keyboard focus and the combat lane, use real-time feedback for short visual effects, and keep presentation independent of damage, score and local simulation clocks.

@@ -5,12 +5,13 @@ const PROJECTILE = preload("res://scripts/enemy_projectile.gd")
 const RECOVERY: float = 1.8
 const MAX_PROJECTILES: int = 8
 var shots_fired: int = 0
+var projectile_speed: float = 4.0
 @onready var arena: Node3D = actor.get_parent().get_parent()
 
 func _physics_process(delta: float) -> void:
 	delta *= actor.simulation_rate
 	strike_visual.visible = false
-	warning.visible = enabled and not actor.dead
+	warning.visible = enabled and not actor.dead and show_debug_text
 	if not enabled or actor.dead or player.dead or not player.combat_enabled:
 		interrupt()
 		return
@@ -33,7 +34,7 @@ func _physics_process(delta: float) -> void:
 		strike_visual.scale = Vector3(3.0, 0.12, 0.35)
 		if windup_left <= 0.0:
 			shoot()
-			rest_left = RECOVERY
+			rest_left = RECOVERY * recovery_factor
 			strike_visual.visible = false
 		return
 	rest_left = maxf(0.0, rest_left - delta)
@@ -44,6 +45,7 @@ func _physics_process(delta: float) -> void:
 		if get_world_3d().direct_space_state.intersect_ray(ray).is_empty():
 			strike_direction = 1 if offset.x >= 0.0 else -1
 			windup_left = windup_duration
+			Sfx.play_cue(&"enemy_windup", actor)
 
 func shoot() -> void:
 	var projectiles: Node3D = arena.get_node("EnemyProjectiles")
@@ -53,6 +55,8 @@ func shoot() -> void:
 	shot.set_script(PROJECTILE)
 	shot.arena = arena
 	shot.direction = strike_direction
+	shot.speed = projectile_speed
 	shot.position = actor.position + Vector3(float(strike_direction) * 0.7, 0.08, 0)
 	projectiles.add_child(shot)
 	shots_fired += 1
+	Sfx.play_cue(&"enemy_shot", actor)

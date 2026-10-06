@@ -1,0 +1,224 @@
+{
+  "ui_hover": {
+    "source": "sound/400 Sounds Pack/UI/sci_fi_hover.wav",
+    "runtime": "assets/audio/ui_hover.ogg",
+    "peak_gain_db": 8.8,
+    "selection": "Silent padding removed"
+  },
+  "ui_click": {
+    "source": "sound/400 Sounds Pack/UI/select_1.wav",
+    "runtime": "assets/audio/ui_click.ogg",
+    "peak_gain_db": 12.0,
+    "selection": "Silent padding removed"
+  },
+  "pause_open": {
+    "source": "sound/400 Sounds Pack/UI/toggle_on.wav",
+    "runtime": "assets/audio/pause_open.ogg",
+    "peak_gain_db": -3.0,
+    "selection": "Silent padding removed"
+  },
+  "pause_close": {
+    "source": "sound/400 Sounds Pack/UI/toggle_off.wav",
+    "runtime": "assets/audio/pause_close.ogg",
+    "peak_gain_db": -3.0,
+    "selection": "Silent padding removed"
+  },
+  "ui_error": {
+    "source": "sound/400 Sounds Pack/UI/sci_fi_disallow.wav",
+    "runtime": "assets/audio/ui_error.ogg",
+    "peak_gain_db": 11.5,
+    "selection": "Silent padding removed"
+  },
+  "drag_pickup": {
+    "source": "sound/400 Sounds Pack/UI/pop_1.wav",
+    "runtime": "assets/audio/drag_pickup.ogg",
+    "peak_gain_db": -3.0,
+    "selection": "Silent padding removed"
+  },
+  "frame_shift": {
+    "source": "sound/400 Sounds Pack/UI/sci_fi_confirm.wav",
+    "runtime": "assets/audio/frame_shift.ogg",
+    "peak_gain_db": 6.0,
+    "selection": "Silent padding removed"
+  },
+  "panel_switch": {
+    "source": "sound/Helton Yan's Pixel Combat/UIMisc_INTERFACE-Zap Select_HY_PC.wav",
+    "runtime": "assets/audio/panel_switch.ogg",
+    "peak_gain_db": -1.5,
+    "selection": "First variation only; silent padding removed"
+  },
+  "double_jump": {
+    "source": "sound/Helton Yan's Pixel Combat/DSGNMisc_MOVEMENT-Jump Sparkle_HY_PC.wav",
+    "runtime": "assets/audio/double_jump.ogg",
+    "peak_gain_db": -2.0,
+    "selection": "First variation only; silent padding removed"
+  },
+  "dash": {
+    "source": "sound/Helton Yan's Pixel Combat/SWSH_MOVEMENT-Sparkle Passby_HY_PC.wav",
+    "runtime": "assets/audio/dash.ogg",
+    "peak_gain_db": -1.5,
+    "selection": "First variation only; silent padding removed"
+  },
+  "footstep_1": {
+    "source": "sound/400 Sounds Pack/Footsteps/foley_footstep_concrete_1.wav",
+    "runtime": "assets/audio/footstep_1.ogg",
+    "peak_gain_db": 6.6,
+    "selection": "Silent padding removed"
+  },
+  "footstep_2": {
+    "source": "sound/400 Sounds Pack/Footsteps/foley_footstep_concrete_2.wav",
+    "runtime": "assets/audio/footstep_2.ogg",
+    "peak_gain_db": -0.9,
+    "selection": "Silent padding removed"
+  },
+  "landing": {
+    "source": "sound/400 Sounds Pack/Footsteps/foley_footstep_concrete_4.wav",
+    "runtime": "assets/audio/landing.ogg",
+    "peak_gain_db": 2.7,
+    "selection": "Silent padding removed"
+  },
+  "swing_1": {
+    "source": "sound/400 Sounds Pack/Weapons/sword_light.wav",
+    "runtime": "assets/audio/swing_1.ogg",
+    "peak_gain_db": -3.0,
+    "selection": "Silent padding removed"
+  },
+  "swing_2": {
+    "source": "sound/400 Sounds Pack/Weapons/sword_slice.wav",
+    "runtime": "assets/audio/swing_2.ogg",
+    "peak_gain_db": -3.0,
+    "selection": "Silent padding removed"
+  },
+  "heavy_swing": {
+    "source": "sound/Helton Yan's Pixel Combat/DSGNMisc_MELEE-Bit Sword_HY_PC.wav",
+    "runtime": "assets/audio/heavy_swing.ogg",
+    "peak_gain_db": -1.8,
+    "selection": "First variation only; silent padding removed"
+  },
+  "hit": {
+    "source": "sound/Helton Yan's Pixel Combat/FGHTImpt_HIT-Smack_HY_PC.wav",
+    "runtime": "assets/audio/hit.ogg",
+    "peak_gain_db": -1.9,
+    "selection": "First variation only; silent padding removed"
+  },
+  "heavy_hit": {
+    "source": "sound/Helton Yan's Pixel Combat/FGHTImpt_HIT-Strong Smack_HY_PC.wav",
+    "runtime": "assets/audio/heavy_hit.ogg",
+    "peak_gain_db": -2.1,
+    "selection": "First variation only; silent padding removed"
+  },
+  "slam": {
+    "source": "sound/Helton Yan's Pixel Combat/DSGNImpt_EXPLOSION-Sand Impact_HY_PC.wav",
+    "runtime": "assets/audio/slam.ogg",
+    "peak_gain_db": -1.5,
+    "selection": "First variation only; silent padding removed"
+  },
+  "parry_start": {
+    "source": "sound/400 Sounds Pack/Weapons/weapon_equip_short.wav",
+    "runtime": "assets/audio/parry_start.ogg",
+    "peak_gain_db": -3.0,
+    "selection": "Silent padding removed"
+  },
+  "parry_success": {
+    "source": "sound/Helton Yan's Pixel Combat/DSGNMisc_MELEE-Sword Parry_HY_PC.wav",
+    "runtime": "assets/audio/parry_success.ogg",
+    "peak_gain_db": -2.0,
+    "selection": "First variation only; silent padding removed"
+  },
+  "enemy_windup": {
+    "source": "sound/400 Sounds Pack/UI/synth_warning.wav",
+    "runtime": "assets/audio/enemy_windup.ogg",
+    "peak_gain_db": 12.0,
+    "selection": "Silent padding removed"
+  },
+  "enemy_swing": {
+    "source": "sound/400 Sounds Pack/Combat and Gore/swipe.wav",
+    "runtime": "assets/audio/enemy_swing.ogg",
+    "peak_gain_db": -3.0,
+    "selection": "Silent padding removed"
+  },
+  "enemy_shot": {
+    "source": "sound/Helton Yan's Pixel Combat/DSGNMisc_HIT-Mecha Laser Pistol_HY_PC.wav",
+    "runtime": "assets/audio/enemy_shot.ogg",
+    "peak_gain_db": -1.7,
+    "selection": "First variation only; silent padding removed"
+  },
+  "hurt": {
+    "source": "sound/Helton Yan's Pixel Combat/DSGNMisc_HIT-Synth Hit_HY_PC.wav",
+    "runtime": "assets/audio/hurt.ogg",
+    "peak_gain_db": -2.1,
+    "selection": "First variation only; silent padding removed"
+  },
+  "enemy_death": {
+    "source": "sound/Helton Yan's Pixel Combat/DSGNSynth_BUFF-Enemy Debuff_HY_PC.wav",
+    "runtime": "assets/audio/enemy_death.ogg",
+    "peak_gain_db": -2.6,
+    "selection": "First variation only; silent padding removed"
+  },
+  "add_collect": {
+    "source": "sound/400 Sounds Pack/Items/coins_gather_quick.wav",
+    "runtime": "assets/audio/add_collect.ogg",
+    "peak_gain_db": -3.0,
+    "selection": "Silent padding removed"
+  },
+  "add_ready": {
+    "source": "sound/400 Sounds Pack/UI/synth_confirmation.wav",
+    "runtime": "assets/audio/add_ready.ogg",
+    "peak_gain_db": 9.2,
+    "selection": "Silent padding removed"
+  },
+  "mult_collect": {
+    "source": "sound/Helton Yan's Pixel Combat/DSGNTonl_USABLE-Magic Coin_HY_PC.wav",
+    "runtime": "assets/audio/mult_collect.ogg",
+    "peak_gain_db": -1.7,
+    "selection": "First variation only; silent padding removed"
+  },
+  "mult_ready": {
+    "source": "sound/Helton Yan's Pixel Combat/DSGNSynth_BUFF-Mecha Level Up_HY_PC.wav",
+    "runtime": "assets/audio/mult_ready.ogg",
+    "peak_gain_db": -1.9,
+    "selection": "First variation only; silent padding removed"
+  },
+  "dilate_start": {
+    "source": "sound/Helton Yan's Pixel Combat/MAGSpel_CAST-Energy Riser_HY_PC.wav",
+    "runtime": "assets/audio/dilate_start.ogg",
+    "peak_gain_db": -1.8,
+    "selection": "First variation only; silent padding removed"
+  },
+  "dilate_end": {
+    "source": "sound/400 Sounds Pack/UI/synth_cancel.wav",
+    "runtime": "assets/audio/dilate_end.ogg",
+    "peak_gain_db": 9.2,
+    "selection": "Silent padding removed"
+  },
+  "wave_start": {
+    "source": "sound/400 Sounds Pack/UI/sci_fi_select_big.wav",
+    "runtime": "assets/audio/wave_start.ogg",
+    "peak_gain_db": 2.9,
+    "selection": "Silent padding removed"
+  },
+  "wave_clear": {
+    "source": "sound/400 Sounds Pack/UI/synth_process_complete.wav",
+    "runtime": "assets/audio/wave_clear.ogg",
+    "peak_gain_db": 12.0,
+    "selection": "Silent padding removed"
+  },
+  "defeat": {
+    "source": "sound/400 Sounds Pack/Musical Effects/synth_bass_negative_quick.wav",
+    "runtime": "assets/audio/defeat.ogg",
+    "peak_gain_db": 12.0,
+    "selection": "Silent padding removed"
+  },
+  "victory": {
+    "source": "sound/400 Sounds Pack/Musical Effects/brass_chime_quick.wav",
+    "runtime": "assets/audio/victory.ogg",
+    "peak_gain_db": 6.4,
+    "selection": "Silent padding removed"
+  },
+  "restart": {
+    "source": "sound/400 Sounds Pack/UI/synth_shut_down.wav",
+    "runtime": "assets/audio/restart.ogg",
+    "peak_gain_db": 10.6,
+    "selection": "Silent padding removed"
+  }
+}

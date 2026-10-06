@@ -33,6 +33,7 @@ func _physics_process(delta: float) -> void:
 		window_left = parry_window
 		cooldown_left = parry_cooldown
 		input_buffer_left = 0.0
+		Sfx.play_cue(&"parry_start", player)
 	guard.position.x = 0.45 * float(player.facing_direction)
 	guard.visible = window_left > 0.0
 
@@ -46,6 +47,7 @@ func try_parry(attacker: Node3D) -> bool:
 	guard.visible = false
 	cooldown_left = 0.0
 	successes += 1
+	Sfx.play_cue(&"parry_success", player)
 	success_visual_left = 0.18
 	player.melee.cancel_attack()
 	# Successful defense immediately gives back offensive initiative.

@@ -28,3 +28,5 @@ air lights share one airborne slash. Every other listed attack has its own row.
 These are short generated pose sequences with four frames per full action.
 They are not hand-animated production loops; scarf/weapon details may vary between
 frames. Check continuity, visual reach and readability during manual play.
+
+Causal-timeline revision: the former beam pose remains unused source artwork. Runtime light-beam/mirage systems are removed; E is dilation. Enemy IDs link physical bodies to pause-menu portraits.

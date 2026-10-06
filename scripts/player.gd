@@ -38,6 +38,7 @@ var dash_cooldown_left: float = 0.0
 var coyote_time_left: float = 0.0
 var jump_buffer_left: float = 0.0
 var dash_direction: int = 1
+var footstep_distance: float = 0.0
 
 @onready var parry: Node3D = $Parry
 @onready var melee: Node3D = $Melee
@@ -54,7 +55,7 @@ func set_input_enabled(enabled: bool) -> void:
 	blocked_inputs.clear()
 	if enabled:
 		# Held buttons belong to the previous panel until released and pressed again.
-		for action in [&"jump", &"dash", &"light_attack", &"heavy_attack", &"parry", &"light_beam"]:
+		for action in [&"jump", &"dash", &"light_attack", &"heavy_attack", &"parry", &"dilate"]:
 			if Input.is_action_pressed(action) or Input.is_action_just_pressed(action):
 				blocked_inputs[action] = true
 	else:
@@ -87,6 +88,7 @@ func receive_damage(damage: int) -> bool:
 	if health == 0:
 		finish_defeat()
 	damage_taken.emit()
+	Sfx.play_cue(&"hurt", self)
 	return true
 
 func finish_defeat() -> void:
@@ -142,6 +144,9 @@ func _physics_process(delta: float) -> void:
 		# The floor/coyote jump is free; only the extra airborne jump spends this.
 		if coyote_time_left <= 0.0:
 			air_jump_available = false
+			Sfx.play_cue(&"double_jump", self)
+		else:
+			Sfx.play_cue(&"jump", self)
 		# Jump can interrupt a dash, but does not restore its airborne allowance.
 		dash_time_left = 0.0
 		velocity.y = jump_speed
@@ -156,6 +161,7 @@ func _physics_process(delta: float) -> void:
 			dash_direction = facing_direction
 			dash_time_left = dash_duration
 			dash_cooldown_left = dash_duration + dash_cooldown
+			Sfx.play_cue(&"dash", self)
 			coyote_time_left = 0.0
 			if not grounded:
 				air_dash_available = false
@@ -175,8 +181,16 @@ func _physics_process(delta: float) -> void:
 	velocity.z = 0.0
 	# move_and_slide uses engine delta; keep stored velocity in native units.
 	velocity *= simulation_rate
+	var before_move := position
 	move_and_slide()
 	velocity /= simulation_rate
+	if is_on_floor() and grounded and dash_time_left <= 0.0 and absf(direction) > 0.0:
+		footstep_distance += absf(position.x - before_move.x)
+		if footstep_distance >= 1.9:
+			footstep_distance = fmod(footstep_distance, 1.9)
+			Sfx.play_cue(&"footstep", self)
+	else:
+		footstep_distance = 0.0
 	position.z = 0.0
 	if is_on_wall() and dash_time_left > 0.0:
 		dash_time_left = 0.0
@@ -185,4 +199,5 @@ func _physics_process(delta: float) -> void:
 		air_jump_available = true
 		# End a dash on landing; do not carry an aerial dash into grounded state.
 		if not grounded:
+			Sfx.play_cue(&"landing", self)
 			dash_time_left = 0.0

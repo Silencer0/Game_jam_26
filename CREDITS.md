@@ -60,3 +60,16 @@ For every external asset:
   damage impact shader and pooled sprite effects are project-authored code.
 
 City panorama revision: built-in imagegen original flat cel-shaded skyline, dark comic outlines, restrained halftone. Replaces the earlier ink illustration at `assets/environment/comic_city.png`. Full skyline now fits each panel camera without texture cropping. Prompt recorded in `docs/RIFT_COURIER_PROMPTS.md`.
+
+## User-supplied sound packs
+- `sound/Helton Yan's Pixel Combat`: Helton Yan, Pixel Combat pack, supplied by the project owner.
+- `sound/400 Sounds Pack`: supplied by the project owner; author and license were not included in this local folder.
+- Used clips and exact original filenames: `assets/audio/SOURCES.json`.
+- Runtime adaptations: first variation selected from the Pixel Combat multi-variation WAVs, silent padding trimmed, peaks balanced, mono 44.1 kHz Ogg Vorbis encoding. Tool: `tools/prepare_sound_assets.py` / FFmpeg.
+- Only the 37 selected sound-effect WAV masters and three BGM masters remain locally in `sound/`; unused source sounds and the superseded jump clip were removed. `.gdignore` excludes masters from Godot imports/exports and `.gitignore` excludes them from Git. The 37 runtime effects and three runtime tracks in `assets/audio/` are included in the repository. No license terms are inferred from the folder names.
+
+## User-supplied temporal soundtrack
+- Source files: `sound/bgm/Iron Velocity.wav` (Past), `heavy rock cover.wav` (Present), `80s Synthwave Remix.wav` (Future).
+- Supplied by the project owner; no author/license metadata file accompanied these downloads. No license is inferred from their names.
+- Adaptations: stereo 44.1 kHz Ogg Vorbis, loudness matching, aligned 176.256-second loops (the shortest supplied version), and an 80 ms fade at the loop end. Longer versions lose at most 2.7 seconds at the tail.
+- Exact durations/source mapping: `assets/audio/music/SOURCES.json`. Reproducible preparation: `tools/prepare_bgm.py`.

@@ -3,6 +3,7 @@ extends Node3D
 
 @export var player_path: NodePath = NodePath("../../Player")
 @export var enabled: bool = false
+var show_debug_text: bool = true
 @export var windup_duration: float = 0.75
 var windup_left: float = 0.0
 var active_left: float = 0.0
@@ -10,6 +11,7 @@ var rest_left: float = 0.6
 var stagger_left: float = 0.0
 var strike_direction: int = 1
 var strike_spent: bool = false
+var recovery_factor: float = 1.0
 var strike_shape: BoxShape3D = BoxShape3D.new()
 var strike_query: PhysicsShapeQueryParameters3D = PhysicsShapeQueryParameters3D.new()
 
@@ -29,7 +31,7 @@ func _ready() -> void:
 func interrupt() -> void:
 	windup_left = 0.0
 	active_left = 0.0
-	rest_left = 1.2
+	rest_left = 1.2 * recovery_factor
 	strike_spent = false
 	strike_visual.visible = false
 
@@ -39,7 +41,7 @@ func _physics_process(delta: float) -> void:
 		warning.visible = false
 		strike_visual.visible = false
 		return
-	warning.visible = true
+	warning.visible = show_debug_text
 	if actor.hit_stopped:
 		return
 	if stagger_left > 0.0:
@@ -56,6 +58,7 @@ func _physics_process(delta: float) -> void:
 		windup_left = maxf(0.0, windup_left - delta)
 		warning.text = "WINDUP %.1f" % windup_left
 		if windup_left <= 0.0:
+			Sfx.play_cue(&"enemy_swing", actor)
 			active_left = 0.10
 			strike_spent = false
 	elif active_left > 0.0:
@@ -67,7 +70,7 @@ func _physics_process(delta: float) -> void:
 			check_strike()
 		if active_left <= 0.0:
 			strike_visual.visible = false
-			rest_left = 1.2
+			rest_left = 1.2 * recovery_factor
 	else:
 		rest_left = maxf(0.0, rest_left - delta)
 		warning.text = "PARRY DRILL: F / Right click"
@@ -75,6 +78,7 @@ func _physics_process(delta: float) -> void:
 		if rest_left <= 0.0 and absf(offset.x) < 2.2 and absf(offset.y) < 1.0:
 			strike_direction = 1 if offset.x >= 0.0 else -1
 			windup_left = windup_duration
+			Sfx.play_cue(&"enemy_windup", actor)
 
 func check_strike() -> void:
 	strike_query.transform = Transform3D(Basis.IDENTITY, actor.global_position + Vector3(float(strike_direction) * 1.25, 0.0, 0.0))

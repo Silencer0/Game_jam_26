@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://scripts/panel_session.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/combat_panel.tscn" id="2"]
@@ -9,11 +9,17 @@
 [ext_resource type="FontFile" path="res://assets/kenney/fonts/KenneyFuture.ttf" id="5"]
 [ext_resource type="Shader" path="res://shaders/comic_paper.gdshader" id="6"]
 
+[ext_resource type="Script" path="res://scripts/causality_board.gd" id="9"]
+[ext_resource type="Script" path="res://scripts/manga_hud.gd" id="10"]
+[ext_resource type="Script" path="res://scripts/controls_page.gd" id="11"]
+[ext_resource type="Shader" path="res://shaders/comic_pause.gdshader" id="12"]
+[ext_resource type="Script" path="res://scripts/manga_pause_ink.gd" id="13"]
+
+[sub_resource type="ShaderMaterial" id="PauseInk"]
+shader = ExtResource("12")
+
 [sub_resource type="ShaderMaterial" id="Paper"]
 shader = ExtResource("6")
-
-[sub_resource type="StyleBoxFlat" id="HealthFill"]
-bg_color = Color(0.2, 0.85, 0.35, 1)
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -45,64 +51,21 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
 
-[node name="Page" type="VBoxContainer" parent="Margin"]
+[node name="Page" type="Control" parent="Margin"]
 layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 8
-
-[node name="Title" type="Label" parent="Margin/Page"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("5")
-theme_override_font_sizes/font_size = 36
-theme_override_colors/font_color = Color(0.055, 0.06, 0.08, 1)
-text = "FRAME//SHIFT"
-
-[node name="Controls" type="Label" parent="Margin/Page"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-theme_override_colors/font_color = Color(0.15, 0.16, 0.19, 1)
-text = "1 / 2 / 3   SWITCH     •     ESC   TWIST     •     E   LIGHT BEAM"
-tooltip_text = "A/D move • Space jump • Shift dash • Click attack • Q launch • F / right click parry • R restart"
-autowrap_mode = 2
-
-[node name="Timeline" type="Label" parent="Margin/Page"]
-visible = false
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "PAST: 1   →   PRESENT: 2   →   FUTURE: 3"
-autowrap_mode = 2
-
-[node name="SharedHealth" type="HBoxContainer" parent="Margin/Page"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 12
-
-[node name="Readout" type="Label" parent="Margin/Page/SharedHealth"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-theme_override_colors/font_color = Color(0.055, 0.06, 0.08, 1)
-text = "HEALTH 6 / 6"
-
-[node name="Bar" type="ProgressBar" parent="Margin/Page/SharedHealth"]
-custom_minimum_size = Vector2(0, 20)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/fill = SubResource("HealthFill")
-max_value = 6.0
-value = 6.0
-show_percentage = false
 mouse_filter = 2
 
 [node name="Panels" type="Control" parent="Margin/Page"]
-layout_mode = 2
-size_flags_vertical = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 mouse_filter = 2
-theme_override_constants/separation = 12
 
 [node name="PanelA" parent="Margin/Page/Panels" instance=ExtResource("2")]
 process_mode = 1
@@ -121,7 +84,17 @@ process_mode = 1
 layout_mode = 0
 arena_id = &"C"
 
+[node name="CombatHUD" type="Control" parent="Margin/Page/Panels"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+z_index = 200
+script = ExtResource("10")
+
 [node name="PauseOverlay" type="Control" parent="."]
+z_index = 100
 process_mode = 2
 visible = false
 layout_mode = 1
@@ -132,6 +105,8 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Dim" type="ColorRect" parent="PauseOverlay"]
+z_index = -2
+material = SubResource("PauseInk")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -139,6 +114,15 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.015, 0.02, 0.035, 0.88)
+
+[node name="CoverInk" type="Control" parent="PauseOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+z_index = -1
+script = ExtResource("13")
 
 [node name="Center" type="CenterContainer" parent="PauseOverlay"]
 layout_mode = 1
@@ -150,7 +134,7 @@ grow_vertical = 2
 
 [node name="Card" type="PanelContainer" parent="PauseOverlay/Center"]
 layout_mode = 2
-custom_minimum_size = Vector2(660, 0)
+custom_minimum_size = Vector2(1000, 0)
 
 [node name="Margin" type="MarginContainer" parent="PauseOverlay/Center/Card"]
 layout_mode = 2
@@ -165,13 +149,28 @@ theme_override_constants/separation = 8
 
 [node name="Title" type="Label" parent="PauseOverlay/Center/Card/Margin/Menu"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 26
-text = "PAUSED"
+theme_override_font_sizes/font_size = 40
+text = "TIMELINE EDITOR"
 horizontal_alignment = 1
+
+[node name="Tabs" type="HBoxContainer" parent="PauseOverlay/Center/Card/Margin/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Timeline" type="Button" parent="PauseOverlay/Center/Card/Margin/Menu/Tabs"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "01 / TIMELINE"
+
+[node name="Controls" type="Button" parent="PauseOverlay/Center/Card/Margin/Menu/Tabs"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "02 / CONTROLS"
 
 [node name="Hint" type="Label" parent="PauseOverlay/Center/Card/Margin/Menu"]
 layout_mode = 2
-text = "Drag to swap roles · Click to select"
+text = "Drag roles: 5 ADD per step / 10 ADD Past to Future."
+tooltip_text = "Role exchanges charge once for the dragged frame. Click to select for free. Hold E in Past or Future: each MULT charge buys five seconds of slowdown and closes one second of the gap."
 horizontal_alignment = 1
 
 [node name="Roles" type="HBoxContainer" parent="PauseOverlay/Center/Card/Margin/Menu"]
@@ -179,7 +178,7 @@ layout_mode = 2
 theme_override_constants/separation = 16
 
 [node name="Past" type="Button" parent="PauseOverlay/Center/Card/Margin/Menu/Roles"]
-custom_minimum_size = Vector2(260, 210)
+custom_minimum_size = Vector2(300, 232)
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("3")
@@ -189,8 +188,8 @@ role = &"Past"
 layout_mode = 0
 offset_left = 10.0
 offset_top = 42.0
-offset_right = 250.0
-offset_bottom = 172.0
+offset_right = 290.0
+offset_bottom = 190.0
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 6
@@ -199,7 +198,7 @@ stretch_mode = 6
 layout_mode = 0
 offset_left = 10.0
 offset_top = 8.0
-offset_right = 250.0
+offset_right = 290.0
 offset_bottom = 38.0
 mouse_filter = 2
 horizontal_alignment = 1
@@ -209,15 +208,15 @@ text = "PAST"
 [node name="Number" type="Label" parent="PauseOverlay/Center/Card/Margin/Menu/Roles/Past"]
 layout_mode = 0
 offset_left = 10.0
-offset_top = 174.0
-offset_right = 250.0
-offset_bottom = 206.0
+offset_top = 194.0
+offset_right = 290.0
+offset_bottom = 226.0
 mouse_filter = 2
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 22
 
 [node name="Present" type="Button" parent="PauseOverlay/Center/Card/Margin/Menu/Roles"]
-custom_minimum_size = Vector2(260, 210)
+custom_minimum_size = Vector2(300, 232)
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("3")
@@ -227,8 +226,8 @@ role = &"Present"
 layout_mode = 0
 offset_left = 10.0
 offset_top = 42.0
-offset_right = 250.0
-offset_bottom = 172.0
+offset_right = 290.0
+offset_bottom = 190.0
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 6
@@ -237,7 +236,7 @@ stretch_mode = 6
 layout_mode = 0
 offset_left = 10.0
 offset_top = 8.0
-offset_right = 250.0
+offset_right = 290.0
 offset_bottom = 38.0
 mouse_filter = 2
 horizontal_alignment = 1
@@ -247,15 +246,15 @@ text = "PRESENT"
 [node name="Number" type="Label" parent="PauseOverlay/Center/Card/Margin/Menu/Roles/Present"]
 layout_mode = 0
 offset_left = 10.0
-offset_top = 174.0
-offset_right = 250.0
-offset_bottom = 206.0
+offset_top = 194.0
+offset_right = 290.0
+offset_bottom = 226.0
 mouse_filter = 2
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 22
 
 [node name="Future" type="Button" parent="PauseOverlay/Center/Card/Margin/Menu/Roles"]
-custom_minimum_size = Vector2(260, 210)
+custom_minimum_size = Vector2(300, 232)
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("3")
@@ -265,8 +264,8 @@ role = &"Future"
 layout_mode = 0
 offset_left = 10.0
 offset_top = 42.0
-offset_right = 250.0
-offset_bottom = 172.0
+offset_right = 290.0
+offset_bottom = 190.0
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 6
@@ -275,7 +274,7 @@ stretch_mode = 6
 layout_mode = 0
 offset_left = 10.0
 offset_top = 8.0
-offset_right = 250.0
+offset_right = 290.0
 offset_bottom = 38.0
 mouse_filter = 2
 horizontal_alignment = 1
@@ -285,17 +284,51 @@ text = "FUTURE"
 [node name="Number" type="Label" parent="PauseOverlay/Center/Card/Margin/Menu/Roles/Future"]
 layout_mode = 0
 offset_left = 10.0
-offset_top = 174.0
-offset_right = 250.0
-offset_bottom = 206.0
+offset_top = 194.0
+offset_right = 290.0
+offset_bottom = 226.0
 mouse_filter = 2
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 22
 
+[node name="LinksHint" type="Label" parent="PauseOverlay/Center/Card/Margin/Menu"]
+layout_mode = 2
+text = "CAUSAL THREADS     /     X DEAD     /     - NOT ARRIVED"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 16
+
+[node name="Links" type="ScrollContainer" parent="PauseOverlay/Center/Card/Margin/Menu"]
+custom_minimum_size = Vector2(0, 176)
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="Board" type="Control" parent="PauseOverlay/Center/Card/Margin/Menu/Links"]
+custom_minimum_size = Vector2(780, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("9")
+mouse_filter = 2
+
+[node name="ControlsPage" type="Control" parent="PauseOverlay/Center/Card/Margin/Menu"]
+visible = false
+layout_mode = 2
+custom_minimum_size = Vector2(920, 440)
+script = ExtResource("11")
+mouse_filter = 2
+
+[node name="Fullscreen" type="Button" parent="PauseOverlay/Center/Card/Margin/Menu"]
+visible = false
+layout_mode = 2
+text = "TOGGLE FULLSCREEN"
+
 [node name="Resume" type="Button" parent="PauseOverlay/Center/Card/Margin/Menu"]
 layout_mode = 2
-text = "Resume (Esc)"
+text = "BACK TO THE FIGHT"
 
 [node name="Restart" type="Button" parent="PauseOverlay/Center/Card/Margin/Menu"]
 layout_mode = 2
-text = "Restart all panels (R)"
+text = "RESTART ISSUE"
+
+[node name="Tutorial" type="Button" parent="PauseOverlay/Center/Card/Margin/Menu"]
+layout_mode = 2
+text = "TRAINING ISSUE / TUTORIAL"

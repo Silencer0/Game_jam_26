@@ -48,6 +48,7 @@ func _ready() -> void:
 	backdrop_camera.add_child(skyline)
 	skyline.position.z = -85.0
 	fit_skyline()
+	get_viewport().size_changed.connect(fit_skyline)
 	# Original atmospheric comic city: one shared texture, no extra simulation.
 	# Red service buildings sit below the horizon behind a low parapet.
 	for x in [5.0, 27.0]:

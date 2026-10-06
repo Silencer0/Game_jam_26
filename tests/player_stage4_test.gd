@@ -149,7 +149,7 @@ func run_checks() -> void:
 	check(enemy.dead and not enemy.is_queued_for_deletion(), "Lethal air finisher keeps the defeated body until ground impact")
 	await ticks(8)
 	check(enemy.position.x > slam_start.x and enemy.position.y < slam_start.y and enemy.get_node("Hurtbox").collision_layer == 0, "Defeated body slams diagonally without retaining a live hurtbox")
-	await ticks(25)
+	await ticks(50) # Allow the existing 0.72-second death animation to finish.
 	check(not is_instance_valid(enemy) and arena.defeated_count == 1, "Lethal slam removes the body on landing and counts one defeat")
 
 	await fresh_arena()

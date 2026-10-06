@@ -78,3 +78,29 @@ Record generated images/audio/models here.
 City panorama revision: built-in imagegen original flat cel-shaded skyline, dark comic outlines, restrained halftone. Replaces the earlier ink illustration at `assets/environment/comic_city.png`. Full skyline now fits each panel camera without texture cropping. Prompt recorded in `docs/RIFT_COURIER_PROMPTS.md`.
 
 Manga presentation revision: code-authored paper halftone UI, ink borders, character contact-shadow shader, camera threat framing and skyline parallax. No new external assets.
+
+## October 6 causal-timeline revision
+Codex read `new_idea.md`, wrote the sequential plan, implemented identity/death
+records, contradiction scoring, pause portrait links, local hold-E dilation and
+singularity. No new raster assets or external runtime dependencies were added.
+Validation uses Godot MCP, GDScript SceneTree tests, a rendered input/GUI-drag loop
+and development-only Playwright/Chromium against the Web export. Results and
+limitations: `docs/NEW_IDEA_TEST_REPORT.md`.
+
+## Shared wave difficulty follow-up
+Codex implemented Future-born linked cohorts, shared wave clearance, immutable ADD-snapshot/exponential HP scaling and bounded AI/bullet aggression. Added progression and actual-input combat tests; validated with Godot MCP, native Godot and the existing Chromium Web smoke. No new art, external assets or runtime dependencies. See `docs/WAVE_DIFFICULTY_PLAN.md` and `docs/WAVE_DIFFICULTY_TEST_REPORT.md`.
+
+## 1080p manga interface revision
+Codex authored vector HUD ribbons, geometric panel clipping/ink frames, paper pause-cover decoration, slanted menu styles, bounded damage typography and death-to-meter trails. Tools: Godot MCP, local GDScript tests, native rendered scenarios and development-only Chromium/Playwright Web QA. No image generation, new external assets or paid templates. Details: `docs/MANGA_UI_PLAN.md`, `docs/MANGA_UI_TEST_REPORT.md`.
+
+Follow-up: black role labels, larger translucent role-colored switch numbers, a larger top-center timeline diagram, matching meter sizes, contained MULT text and a centered single-line defeat message. Checked startup with Godot MCP; visual review is left to the user as requested.
+
+Frame-shift follow-up: vector offscreen-enemy arrows in inactive panels, gap/10 real-time migration and wave delays, 5 ADD per role crossed, affordability checks and eased bidirectional preview transfers. Godot MCP and focused GDScript checks; no new external art or dependencies.
+
+Sound-design pass: Codex selected and adapted 38 clips from the user's local sound packs using FFmpeg, authored a bounded cue mixer and event hooks for UI, player/enemy movement, combat, scores and temporal actions. Added two five-segment ADD banks. No generated audio or additional downloads. Source mapping is in `assets/audio/SOURCES.json`; automated Godot checks verify cues and gameplay.
+
+Temporal music/tutorial pass: Codex adapted the owner's three BGM versions with FFmpeg and authored synchronized role-based music with crossfades, plus twelve guided tutorial drills in a separate Training Issue. Original combat, identities and paid role swaps are reused. No generated audio or new downloads. Asset import/parser review only; gameplay/audio playtesting is left to the owner as requested. Plan: `docs/TUTORIAL_IMPLEMENTATION_PLAN.md`.
+
+Dilation follow-up: Codex replaced continuous nonlinear gap costs with whole MULT charges, five-second 30% local environment slowdowns per charge, and one-second gap reductions. Purchased durations survive release/switches; training instructions, recharge practice and HUD countdowns were updated. No assets or dependencies added; gameplay review remains with the owner.
+
+Audio cleanup: Codex removed 713 unused source WAVs and the superseded runtime jump clip using the live cue mappings, retained all 37 runtime effects and three BGM tracks, and excluded retained local WAV masters from Git. Updated preparation picks and source manifest; no gameplay or audio content changes.

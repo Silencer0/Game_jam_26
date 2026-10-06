@@ -3,7 +3,7 @@ extends "res://scripts/melee_grunt.gd"
 
 func _ready() -> void:
 	super._ready()
-	trainer.rest_left = 1.0
+	trainer.rest_left = 1.0 * trainer.recovery_factor
 	visual.scale = Vector3.ONE
 	readout.text = "GUNNER %d / %d" % [health, max_health]
 

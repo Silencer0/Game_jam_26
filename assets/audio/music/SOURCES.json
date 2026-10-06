@@ -1,0 +1,20 @@
+{
+  "loop_seconds": 176.256,
+  "tracks": {
+    "Past": {
+      "source": "sound/bgm/Iron Velocity.wav",
+      "runtime": "assets/audio/music/past.ogg",
+      "original_seconds": 178.954667
+    },
+    "Present": {
+      "source": "sound/bgm/heavy rock cover.wav",
+      "runtime": "assets/audio/music/present.ogg",
+      "original_seconds": 177.173333
+    },
+    "Future": {
+      "source": "sound/bgm/80s Synthwave Remix.wav",
+      "runtime": "assets/audio/music/future.ogg",
+      "original_seconds": 176.256
+    }
+  }
+}

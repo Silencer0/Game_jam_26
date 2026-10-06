@@ -9,6 +9,7 @@ const DAMAGE: Array[int] = [1, 1, 2]
 
 @export var combo_cooldown: float = 0.20
 var attacking: bool = false
+var swing_sound_played: bool = false
 var combo_cooldown_left: float = 0.0
 var combo_index: int = 0
 var attack_kind: StringName = &"ground_light"
@@ -66,6 +67,10 @@ func _physics_process(delta: float) -> void:
 	var live: bool = attack_elapsed >= active_start and attack_elapsed < active_end
 	swing.visible = live
 	if live:
+		if not swing_sound_played:
+			swing_sound_played = true
+			var cue: StringName = &"heavy_swing" if attack_kind in [&"launcher", &"air_finisher"] else (&"swing" if combo_index % 2 == 0 else &"swing_alt")
+			Sfx.play_cue(cue, player, 1.0 + combo_index * 0.03)
 		check_hits()
 	# Buffered air follow-ups link as soon as the live window ends, keeping
 	# the short chain reachable while both actors are falling.
@@ -125,6 +130,7 @@ func start_attack(index: int, kind: StringName = &"ground_light") -> void:
 	combo_index = index
 	attack_kind = kind
 	attack_elapsed = 0.0
+	swing_sound_played = false
 	attack_direction = player.facing_direction
 	queued_kind = &""
 	pending_kind = &""
@@ -173,6 +179,8 @@ func check_hits() -> void:
 			continue
 		hit_targets[target_id] = true
 		var damage: int = 2 if attack_kind == &"launcher" or attack_kind == &"air_finisher" else DAMAGE[mini(combo_index, 2)]
+		if player.health_owner != null and player.health_owner.has_method("scaled_damage"):
+			damage = player.health_owner.scaled_damage(damage)
 		receiver.receive_melee_hit(damage, attack_direction, attack_kind)
 		receiver.apply_hit_stop(stop_duration)
 		made_contact = true

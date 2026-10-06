@@ -6,7 +6,7 @@
 - GDScript
 - Compatibility renderer
 - Primary target: Web / itch.io
-- Target resolution: 1280x720
+- Target resolution: 1920x1080
 
 ## Core Architecture
 

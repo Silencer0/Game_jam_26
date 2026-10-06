@@ -1,13 +1,15 @@
-extends "res://tests/player_stage6_test.gd"
+extends "res://tests/causal_test_base.gd"
 ## Recovery limits strikes, not pursuit; switching preserves the local attack clock.
 
 func run_checks() -> void:
-	await fresh_page(true, true)
+	await fresh()
+	populate()
+	await ticks(100) # Settle freshly arrived copies before measuring pursuit.
 	for index in range(3):
 		page.select_panel(index)
-		var actor: CharacterBody3D = panels[index].arena.enemies.get_child(0)
+		var actor: CharacterBody3D = page.panels[index].arena.enemies.get_child(0)
 		actor.position.x = 14.0
-		panels[index].arena.player.position.x = 6.0
+		page.panels[index].arena.player.position.x = 6.0
 		actor.velocity = Vector3.ZERO
 		actor.trainer.enabled = true
 		actor.trainer.windup_left = 0.0
@@ -24,8 +26,10 @@ func run_checks() -> void:
 		check(actor.position.x < start_x - 0.2, "Panel %d resumes native pursuit immediately when selected during recovery" % (index + 1))
 		actor.trainer.enabled = false
 		actor.trainer.rest_left = 100.0
-	await fresh_page(true, true)
-	var actor: CharacterBody3D = panels[0].arena.enemies.get_child(0)
+	await fresh()
+	populate()
+	await ticks(100) # Settle freshly arrived copies before measuring pursuit.
+	var actor: CharacterBody3D = page.panels[0].arena.enemies.get_child(0)
 	actor.position.x = 14.0
 	actor.trainer.enabled = true
 	actor.trainer.rest_left = 0.0
@@ -41,9 +45,11 @@ func run_checks() -> void:
 	actor.hitstun_left = 0.2
 	await ticks(6)
 	check(is_equal_approx(actor.position.x, start_x), "Hit stun still prevents pursuit")
-	await fresh_page(true, true)
-	actor = panels[1].arena.enemies.get_child(0)
-	actor.position = panels[1].arena.player.position + Vector3(1.5, 0.0, 0.0)
+	await fresh()
+	populate()
+	await ticks(100) # Settle freshly arrived copies before measuring pursuit.
+	actor = page.panels[1].arena.enemies.get_child(0)
+	actor.position = page.panels[1].arena.player.position + Vector3(1.5, 0.0, 0.0)
 	actor.velocity = Vector3.ZERO
 	actor.trainer.enabled = true
 	actor.trainer.rest_left = 1.2

@@ -2,6 +2,7 @@ extends Node3D
 ## One-hit local projectile; a facing parry reverses it into enemy-only damage.
 
 const SPEED: float = 4.0
+var speed: float = SPEED
 const LIFETIME: float = 4.5
 var arena: Node3D
 var direction: int = 1
@@ -40,7 +41,7 @@ func _physics_process(delta: float) -> void:
 		queue_free()
 		return
 	var start: Vector3 = global_position
-	var motion := Vector3(float(direction) * SPEED * delta, 0, 0)
+	var motion := Vector3(float(direction) * speed * delta, 0, 0)
 	var space: PhysicsDirectSpaceState3D = get_world_3d().direct_space_state
 	wall_query.transform = Transform3D(Basis.IDENTITY, start)
 	wall_query.motion = motion
@@ -67,7 +68,8 @@ func _physics_process(delta: float) -> void:
 		if not space.intersect_ray(ray).is_empty():
 			continue
 		if reflected:
-			target.receive_melee_hit(2, direction, &"reflected_shot")
+			var damage: int = arena.player.health_owner.scaled_damage(2) if arena.player.health_owner != null else 2
+			target.receive_melee_hit(damage, direction, &"reflected_shot")
 			target.apply_hit_stop(0.06)
 		elif arena.player.parry.window_left > 0.0:
 			# Use the approach side for facing even if a large sweep passes the body.

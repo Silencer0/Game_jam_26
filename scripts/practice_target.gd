@@ -22,6 +22,7 @@ func apply_hit_stop(duration: float) -> void:
 	hit_stop_left = maxf(hit_stop_left, duration)
 
 func receive_melee_hit(damage: int, direction: int, kind: StringName = &"ground_light") -> void:
+	Sfx.play_cue(&"heavy_hit" if kind in [&"launcher", &"air_finisher", &"reflected_shot"] else &"hit", self)
 	hit_count += 1
 	total_damage += damage
 	last_hit_direction = direction
@@ -61,6 +62,7 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	velocity /= simulation_rate
 	if slamming and is_on_floor():
+		Sfx.play_cue(&"slam", self)
 		velocity = Vector3.ZERO
 		slamming = false
 	position.z = 0.0

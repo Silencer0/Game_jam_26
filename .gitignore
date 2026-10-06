@@ -4,3 +4,6 @@
 
 # Generated Web exports
 /build/
+
+# Local WAV masters; ship the compact runtime Ogg files in assets/audio instead
+/sound/
